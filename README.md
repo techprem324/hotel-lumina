@@ -1,121 +1,109 @@
-# LUMINA | Next-Gen Restaurant Operating System (Restaurant OS)
+# LUMINA — Celestial Fine Dining Platform
 
-LUMINA is a next-generation fine dining platform that merges high-end atmospheric UI/UX design with startup-level business automation workflows. Built on the custom **Midnight Reserve** dark theme, it functions as a comprehensive Restaurant OS—combining customer-facing interfaces, interactive seat selections, AI sommeliers, and operational dashboards.
-
----
-
-## 🌐 Production Live Deployment
-
-The frontend application is deployed and live at:  
-👉 **[Lumina Live Platform](https://lumina-restaurant-os.vercel.app)**
+A modern, ultra-luxurious, and responsive multi-page web application designed for **LUMINA**, an elite fine-dining establishment serving Royal Awadhi & Mughlai, Contemporary European, Pan-Asian Haute Cuisine, Artisanal Patisserie, and Bespoke Mixology.
 
 ---
 
-## 🏗️ Technical Architecture & Features Overview
+## 🌐 Live Public Deployment
 
-Lumina Restaurant OS is designed on a modular three-tier architecture:
+The live application is hosted globally on Vercel Edge Infrastructure:
 
-```
-[ Frontend Client ] ──( HTTPS / WebSockets )──► [ Express API Server ] ──┬──( SQL Queries )──► [ PostgreSQL Database ]
-   (Vercel SPA)                                     (Render Docker)      │                        (Supabase/Neon)
-                                                                         └──( Mongoose )──────► [ MongoDB Atlas ]
-                                                                                                  (Bookings Database)
-```
-
-### Architectural Modules
-1. **Frontend (FOH client)**: High-performance single-page architecture built with custom HSL theme variables, SVG seating maps, and reactive Canvas background particles.
-2. **Backend (API Server)**: Node.js Express server routing table bookings, inventory reorders, and CRM search queries. Handles real-time progression push alerts using **Socket.io** and automatic email notifications via **Nodemailer**.
-3. **Database Layer**: Dual-persistence architecture. Uses a **PostgreSQL** schema for relational transactions (tables, menu items, orders, CRM profiles) and **MongoDB Atlas** for table booking persistence.
+👉 **Live Public URL**: [https://ht-gules.vercel.app](https://ht-gules.vercel.app)
 
 ---
 
-## 🌌 Key Capabilities & Features
+## 🌟 Architectural Features & Highlights
 
-### 1. Customer Experience (FOH)
-* **Atmospheric Vibe Selector Dial**: Allows guests to rotate and align the website menu, UI accents, and atmosphere with their evening's intent (*Seductive & Moody*, *Fresh & Energizing*, *Intimate & Romantic*, *Late-Night Social*).
-* **Interactive Seating Map**: An interactive vector map showing real-time table configurations. Guests can click and book their exact dining zone (Window, Main Hall, Patio, Lounge).
-* **AI Virtual Sommelier**: A reserve cellar chatbot assistant that suggests matching vintage wines in real-time based on active items in the cart.
-* **Shopping Cart & Checkout Integration**: Fully responsive basket drawer with mock Stripe/UPI checkout integration.
+### 1. 🏛️ Multi-Page Luxury Experience
+* **Home (`index.html`)**: Cinematic Hero Banner, "Three Decades of Culinary Mastery" Story, 5 Master Cuisine Disciplines, Signature Dish Showcase, Table Reservation Form, Gallery Preview, Reviews, Multi-Location Salons, and Footer.
+* **Menu (`menu.html`)**: Full categorized menu (Appetizers, Royal Mughlai, European, Pan-Asian, Artisanal Breads, Desserts, Mixology) with live search, dietary filters (*Veg*, *Non-Veg*, *Halal*, *Gluten-Free*, *Chef's Special*), spice meters, and wine pairing advice.
+* **Gallery (`gallery.html`)**: Interactive 360° architectural gallery showcasing the Grand Imperial Dining Hall, Sunset Alfresco Terrace, The Velvet Bar, Private Vaults, and Live Kitchen, complete with full-screen Lightbox image viewer.
+* **Contact (`contact.html`)**: Host desk contact form, direct hotline, operational hours breakdown, white-glove valet guidelines, dress code rules, and interactive FAQ accordion.
 
-### 2. Startup Business Operations (BOH)
-* **Guest CRM Profile Lookup**: Allows managers to search guest profiles by name to retrieve previous visit counts, allergen alerts, and cellar preferences.
-* **Smart Waitlist Allocation**: Seating table mapping with an AI automated assignment button that text-notifies guests via SMS when their table is ready.
-* **AI Demand Forecasting**: Visual chart tracking hourly peak demand to automate inventory prep and staff scheduling.
-* **Supply Chain Alert Engine**: Automated alerts notifying staff when high-value reserve stock (e.g. Alba White Truffles) runs low, with a one-click restock purchase trigger.
+### 2. ⚡ Serverless API & Dual-Mode Backend
+* **Vercel Serverless Functions (`/api/*`)**:
+  * `POST /api/reservations`: Processes guest table bookings, validates party size, date/time, seating area, and stores records securely in **MongoDB Atlas** (`lumina_db.reservations`).
+  * `GET /api/reservations`: Retrieves confirmed reservation ledgers for management inspection.
+  * `POST /api/contact`: Processes guest inquiries and saves records in `lumina_db.inquiries`.
+* **Local Node.js Engine (`server.js`)**: Standalone local HTTP server with MongoDB Atlas auto-reconnection and static asset serving on port 8123.
+
+### 3. 🎨 Design Aesthetics & Typography
+* **Color Palette**: Obsidian Charcoal (`#0B0B0F`), Signature Warm Gold (`#D4AF37`), Luxury Bronze (`#C59963`), and Champagne Velvet.
+* **Typography**: *Playfair Display* & *Cormorant Garamond* for serif headers paired with *Inter* and *Montserrat* for body text.
+* **Interactive UI**: Glassmorphic cards, gold shimmer CTA buttons, dynamic scroll progress indicators, and toast notifications.
 
 ---
 
 ## 📁 Repository Directory Structure
 
 ```
-├── docs/                      # Technical Design & Specifications
-│   ├── sitemap.md             # Navigation layouts & routes
-│   ├── user_flows.md          # Checkout, reservation, & waitlist flows
-│   ├── design_system.md       # Color tokens, typography, & states
-│   ├── component_architecture.md # Next.js/React layout design
-│   ├── backend_architecture.md  # Express API endpoints & Sockets
-│   └── testing_strategy.md    # Security, JWT, rate-limits & CI/CD
-│
-├── database/                  # SQL Relational Storage Layer
-│   ├── schema.sql             # PostgreSQL tables definition
-│   └── seed.sql               # Seed data (items, tables, users, CRM profiles)
-│
-├── backend/                   # REST & Websocket API Server
-│   ├── server.js              # Express API endpoints & Socket.io
-│   └── Dockerfile             # Production container settings
-│
-├── frontend/                  # Responsive Bento Client
-│   ├── index.html             # Bento layout shell
-│   ├── index.css              # Custom variables & transitions
-│   ├── app.js                 # Seating maps, mood filters, & socket links
-│   └── vercel.json            # Vercel static routing configurations
-│
-└── package.json               # Root scripts & unified dependencies
+d:/ht/
+├── index.html                    # Homepage (Hero, Story, Cuisines, Signatures, Booking)
+├── menu.html                     # Full Menu Explorer with Live Search & Dietary Filters
+├── gallery.html                  # 360° Architectural Ambiance Gallery with Lightbox Viewer
+├── contact.html                  # Host Desk Contact Form & Interactive FAQ Accordion
+├── favicon.svg                   # Brand Favicon Insignia
+├── robots.txt                    # Search Engine Crawler Directives
+├── sitemap.xml                   # Search Engine Indexing Sitemap
+├── package.json                  # Scripts & Unified Dependencies
+├── vercel.json                   # Vercel Production Deployment Settings
+├── server.js                     # Local Node.js HTTP Server & MongoDB Integration
+├── css/
+│   └── styles.css                # Custom Luxury Styling, Glassmorphism, Gold Gradients
+├── js/
+│   ├── main.js                   # Navigation, Modal Handlers, Lightbox & Mobile Drawer
+│   ├── reservation.js            # Table Reservation Form Validation & API Dispatch
+│   └── menu.js                   # Real-Time Menu Search & Filter Engine
+└── api/
+    ├── reservations.js           # Serverless API Endpoint for Table Bookings
+    └── contact.js                # Serverless API Endpoint for Concierge Inquiries
 ```
 
 ---
 
 ## 🛠️ Local Development Setup
 
-To run the full Lumina platform (frontend + backend API) locally:
-
 ### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org) installed on your machine.
+Ensure you have [Node.js](https://nodejs.org) (v18+) installed.
 
-### 2. Installation & Configuration
-1. Clone the repository and install dependencies at the root folder:
-   ```bash
-   npm install
-   ```
-2. Create a `.env` file at the root of the project with your database and email credentials:
-   ```env
-   # MongoDB Atlas Connection URI
-   MONGODB_URI=mongodb+srv://anshusrvstva78kumar99_db_user:Wg8Vyer8TSEsgMev@cluster0.olk9657.mongodb.net/lumina_db?retryWrites=true&w=majority
+### 2. Installation
+```bash
+# Navigate to the project directory
+cd d:/ht
 
-   # Nodemailer SMTP Email Credentials (Gmail App Password)
-   EMAIL_USER=your_email@gmail.com
-   EMAIL_PASS=your_gmail_app_password
-   ```
+# Install dependencies
+npm install
+```
 
-### 3. Run Development Servers
-Open two terminal windows:
+### 3. Environment Configuration
+Create a `.env` file at the root of `d:/ht`:
+```env
+PORT=8123
+MONGODB_URI=mongodb+srv://anshusrvstva78kumar99_db_user:Wg8Vyer8TSEsgMev@cluster0.olk9657.mongodb.net/lumina_db?retryWrites=true&w=majority
+```
 
-* **Start the Express API Backend (Port 5000)**:
+### 4. Running the Application
+* **Start Local Development Server**:
   ```bash
-  npm run dev:backend
+  npm start
   ```
-* **Start the Frontend Web Server (Port 3000)**:
-  ```bash
-  npm run dev:frontend
-  ```
-
-Open your browser to `http://localhost:3000` to interact with the platform.
+  Open your browser to `http://localhost:8123` to interact with the live website.
 
 ---
 
-## 🚀 Live Production Deployments
+## 🚀 Vercel Production Deployment
 
-The Lumina digital experience is hosted globally on edge network infrastructure:
+To publish updates to Vercel:
 
-* 🌐 **Production URL**: [https://lumina-restaurant-os.vercel.app](https://lumina-restaurant-os.vercel.app)
-* 🔗 **Direct Deployment URL**: [https://lumina-restaurant-k2514m4ep-dev-prem.vercel.app](https://lumina-restaurant-k2514m4ep-dev-prem.vercel.app)
+```bash
+# Trigger production deployment via Vercel CLI
+npx vercel --prod
+```
+
+Or connect the repository directly in your **[Vercel Dashboard](https://vercel.com/new)**. Vercel automatically detects `vercel.json` and builds the static pages alongside serverless API functions in `/api`.
+
+---
+
+## 📜 License & Credits
+
+Created for **LUMINA Fine Dining & Lounge** — All Rights Reserved.

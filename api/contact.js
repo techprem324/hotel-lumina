@@ -6,11 +6,20 @@ let cachedDb = null;
 
 async function connectToDatabase() {
   if (cachedDb) return cachedDb;
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
-  const db = client.db('lumina_db');
-  cachedDb = db;
-  return db;
+  if (!MONGODB_URI) {
+    console.warn('MONGODB_URI is not set in Vercel Environment Variables.');
+    return null;
+  }
+  try {
+    const client = new MongoClient(MONGODB_URI);
+    await client.connect();
+    const db = client.db('lumina_db');
+    cachedDb = db;
+    return db;
+  } catch (e) {
+    console.error('MongoDB connection error:', e);
+    return null;
+  }
 }
 
 module.exports = async (req, res) => {
@@ -36,8 +45,12 @@ module.exports = async (req, res) => {
         createdAt: new Date()
       };
 
-      const result = await db.collection('inquiries').insertOne(inquiry);
-      return res.status(201).json({ success: true, message: 'Message sent successfully!', inquiryId: result.insertedId });
+      if (db) {
+        const result = await db.collection('inquiries').insertOne(inquiry);
+        return res.status(201).json({ success: true, message: 'Message sent successfully!', inquiryId: result.insertedId });
+      } else {
+        return res.status(201).json({ success: true, message: 'Message received! (Add MONGODB_URI in Vercel to store permanently)' });
+      }
     }
 
     return res.status(405).json({ error: 'Method Not Allowed' });

@@ -332,6 +332,16 @@
     [$('#newsletter-email'), (v) => /.+@.+\..+/.test(v)],
   ]);
 
+  /* ---------- Global Image Error Fallback Handler ---------- */
+  const fallbackGourmetImage = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80';
+  document.addEventListener('error', (e) => {
+    if (e.target && e.target.tagName === 'IMG' && !e.target.dataset.fallbackApplied) {
+      e.target.dataset.fallbackApplied = 'true';
+      e.target.src = fallbackGourmetImage;
+    }
+  }, true);
+
   /* ---------- Footer year ---------- */
   $$('.js-year').forEach((el) => { el.textContent = new Date().getFullYear(); });
 })();
+
