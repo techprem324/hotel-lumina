@@ -1,15 +1,12 @@
 {
   "name": "ht",
   "version": "1.0.0",
-  "description": "LUMINA Restaurant Web Application",
+  "description": "LUMINA Fine Dining & Lounge Web Platform",
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
-    "build": "echo 'Static HTML and API serverless deployment ready'"
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('dist')) fs.mkdirSync('dist'); ['index.html','menu.html','gallery.html','contact.html','favicon.svg','robots.txt','sitemap.xml'].forEach(f => fs.existsSync(f) && fs.copyFileSync(f, 'dist/'+f)); ['css','js'].forEach(d => { if(fs.existsSync(d)) { if(!fs.existsSync('dist/'+d)) fs.mkdirSync('dist/'+d); fs.readdirSync(d).forEach(f => fs.copyFileSync(d+'/'+f, 'dist/'+d+'/'+f)); } });\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "dotenv": "^17.4.2",
     "mongodb": "^7.5.0"
