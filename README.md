@@ -1,109 +1,128 @@
-# LUMINA — Celestial Fine Dining Platform
+# 🌟 LUMINA — Celestial Fine Dining Platform
 
-A modern, ultra-luxurious, and responsive multi-page web application designed for **LUMINA**, an elite fine-dining establishment serving Royal Awadhi & Mughlai, Contemporary European, Pan-Asian Haute Cuisine, Artisanal Patisserie, and Bespoke Mixology.
+> **Where Royal Culinary Masterpieces Meet Cutting-Edge Automation**
 
----
-
-## 🌐 Live Public Deployment
-
-The live application is hosted globally on Vercel Edge Infrastructure:
-
-👉 **Live Public URL**: [https://ht-gules.vercel.app](https://ht-gules.vercel.app)
+[![Live Vercel Platform](https://img.shields.io/badge/Vercel-Live%20Platform-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hotel-lumina-m.vercel.app/)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/techprem324/hotel-lumina)
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://cloud.mongodb.com)
 
 ---
 
-## 🌟 Architectural Features & Highlights
+## 🌐 Production Live Deployment
 
-### 1. 🏛️ Multi-Page Luxury Experience
-* **Home (`index.html`)**: Cinematic Hero Banner, "Three Decades of Culinary Mastery" Story, 5 Master Cuisine Disciplines, Signature Dish Showcase, Table Reservation Form, Gallery Preview, Reviews, Multi-Location Salons, and Footer.
-* **Menu (`menu.html`)**: Full categorized menu (Appetizers, Royal Mughlai, European, Pan-Asian, Artisanal Breads, Desserts, Mixology) with live search, dietary filters (*Veg*, *Non-Veg*, *Halal*, *Gluten-Free*, *Chef's Special*), spice meters, and wine pairing advice.
-* **Gallery (`gallery.html`)**: Interactive 360° architectural gallery showcasing the Grand Imperial Dining Hall, Sunset Alfresco Terrace, The Velvet Bar, Private Vaults, and Live Kitchen, complete with full-screen Lightbox image viewer.
-* **Contact (`contact.html`)**: Host desk contact form, direct hotline, operational hours breakdown, white-glove valet guidelines, dress code rules, and interactive FAQ accordion.
-
-### 2. ⚡ Serverless API & Dual-Mode Backend
-* **Vercel Serverless Functions (`/api/*`)**:
-  * `POST /api/reservations`: Processes guest table bookings, validates party size, date/time, seating area, and stores records securely in **MongoDB Atlas** (`lumina_db.reservations`).
-  * `GET /api/reservations`: Retrieves confirmed reservation ledgers for management inspection.
-  * `POST /api/contact`: Processes guest inquiries and saves records in `lumina_db.inquiries`.
-* **Local Node.js Engine (`server.js`)**: Standalone local HTTP server with MongoDB Atlas auto-reconnection and static asset serving on port 8123.
-
-### 3. 🎨 Design Aesthetics & Typography
-* **Color Palette**: Obsidian Charcoal (`#0B0B0F`), Signature Warm Gold (`#D4AF37`), Luxury Bronze (`#C59963`), and Champagne Velvet.
-* **Typography**: *Playfair Display* & *Cormorant Garamond* for serif headers paired with *Inter* and *Montserrat* for body text.
-* **Interactive UI**: Glassmorphic cards, gold shimmer CTA buttons, dynamic scroll progress indicators, and toast notifications.
+👉 **[Lumina Live Platform](https://hotel-lumina-m.vercel.app/)**
 
 ---
 
-## 📁 Repository Directory Structure
+## 📊 System Architecture & Workflow
 
-```
-d:/ht/
-├── index.html                    # Homepage (Hero, Story, Cuisines, Signatures, Booking)
-├── menu.html                     # Full Menu Explorer with Live Search & Dietary Filters
-├── gallery.html                  # 360° Architectural Ambiance Gallery with Lightbox Viewer
-├── contact.html                  # Host Desk Contact Form & Interactive FAQ Accordion
-├── favicon.svg                   # Brand Favicon Insignia
-├── robots.txt                    # Search Engine Crawler Directives
-├── sitemap.xml                   # Search Engine Indexing Sitemap
-├── package.json                  # Scripts & Unified Dependencies
-├── vercel.json                   # Vercel Production Deployment Settings
-├── server.js                     # Local Node.js HTTP Server & MongoDB Integration
-├── css/
-│   └── styles.css                # Custom Luxury Styling, Glassmorphism, Gold Gradients
-├── js/
-│   ├── main.js                   # Navigation, Modal Handlers, Lightbox & Mobile Drawer
-│   ├── reservation.js            # Table Reservation Form Validation & API Dispatch
-│   └── menu.js                   # Real-Time Menu Search & Filter Engine
-└── api/
-    ├── reservations.js           # Serverless API Endpoint for Table Bookings
-    └── contact.js                # Serverless API Endpoint for Concierge Inquiries
+```mermaid
+flowchart TD
+    subgraph Client ["FOH Client Layer"]
+        A["🌐 Guest Browser"] -->|Navigates Pages| B["📄 Multi-Page HTML5 / CSS3 / JS"]
+        B --> C["📅 Table Reservation Form"]
+        B --> D["📩 Host Desk Inquiry Form"]
+    end
+
+    subgraph Edge ["Vercel Edge Platform"]
+        B -->|Static CDN Hosting| E["⚡ Vercel Edge Network"]
+        C -->|POST /api/reservations| F["λ Serverless Booking Function"]
+        D -->|POST /api/contact| G["λ Serverless Contact Function"]
+    end
+
+    subgraph Database ["Cloud Database Layer"]
+        F -->|Bson Insert| H[("🍃 MongoDB Atlas<br/>lumina_db.reservations")]
+        G -->|Bson Insert| I[("🍃 MongoDB Atlas<br/>lumina_db.inquiries")]
+    end
 ```
 
 ---
 
-## 🛠️ Local Development Setup
+## 🔁 Reservation & Order Workflow
 
-### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org) (v18+) installed.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Guest as 👤 Diner
+    participant UI as 🖥️ Lumina Client UI
+    participant API as ⚡ Vercel API (/api/reservations)
+    participant DB as 🍃 MongoDB Atlas (lumina_db)
 
-### 2. Installation
+    Guest->>UI: Select Date, Time, Party & Seating Zone
+    Guest->>UI: Submit Booking Request
+    UI->>API: POST /api/reservations (JSON Payload)
+    alt MongoDB Online
+        API->>DB: insertOne(reservation)
+        DB-->>API: { insertedId }
+        API-->>UI: 201 Created (Booking Ref #ID)
+    else DB Offline Fallback
+        API-->>UI: 201 Created (Local Booking Ref)
+    end
+    UI-->>Guest: 🎉 Interactive Confirmation & Ref Badge
+```
+
+---
+
+## 💻 Tech Stack Summary
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend UI** | HTML5, CSS3, ES6+ JS | Multi-page, glassmorphic UI, responsive layouts |
+| **Typography** | Google Fonts (*Playfair Display*, *Inter*) | Premium fine-dining serif & sans-serif fonts |
+| **Edge Serverless** | Vercel Serverless Functions | Node.js microservices for API routes |
+| **Local Engine** | Node.js (`server.js`) | Standalone HTTP server for offline testing |
+| **Database** | MongoDB Atlas | Cloud NoSQL persistence for reservations & inquiries |
+| **Icons & Assets** | SVG Vectors & Unsplash HD CDN | High-res culinary photography with safe image fallbacks |
+
+---
+
+## 🗺️ Page Routes & Features
+
+| Page | File | Core Functionality |
+| :--- | :--- | :--- |
+| **Home** | `index.html` | Hero carousel, 5 Master Cuisines, Chef's Signatures, VIP Seating Map, Reservation Widget |
+| **Menu** | `menu.html` | Live search, category tabs, dietary filter pills (*Veg*, *Halal*, *GF*), spice meters, wine pairings |
+| **Gallery** | `gallery.html` | 360° architectural photos (Dining Hall, Alfresco, Velvet Bar, Salons) with Lightbox viewer |
+| **Contact** | `contact.html` | Host desk form, direct phone, operating hours, valet parking policy, dress code FAQ accordion |
+
+---
+
+## 🔌 API Endpoints Reference
+
+| Endpoint | Method | Input Parameters | Output Response |
+| :--- | :--- | :--- | :--- |
+| `/api/reservations` | `POST` | `name`, `email`, `phone`, `guests`, `date`, `time`, `requests` | `{ success: true, bookingId, reservation }` |
+| `/api/reservations` | `GET` | None | `{ success: true, count, reservations: [] }` |
+| `/api/contact` | `POST` | `name`, `email`, `phone`, `subject`, `message` | `{ success: true, inquiryId }` |
+
+---
+
+## 🔑 Environment Variables Configuration
+
+| Variable | Description | Example Value |
+| :--- | :--- | :--- |
+| `MONGODB_URI` | MongoDB Atlas Connection String | `mongodb+srv://user:pass@cluster.mongodb.net/lumina_db` |
+| `PORT` | Local Server Port | `8123` |
+
+---
+
+## ⚡ Local Setup Commands
+
 ```bash
-# Navigate to the project directory
-cd d:/ht
+# 1. Clone repository
+git clone https://github.com/techprem324/hotel-lumina.git
+cd hotel-lumina
 
-# Install dependencies
+# 2. Install dependencies
 npm install
-```
 
-### 3. Environment Configuration
-Create a `.env` file at the root of `d:/ht`:
-```env
-PORT=8123
-MONGODB_URI=mongodb+srv://anshusrvstva78kumar99_db_user:Wg8Vyer8TSEsgMev@cluster0.olk9657.mongodb.net/lumina_db?retryWrites=true&w=majority
+# 3. Start local development server (Port 8123)
+npm start
 ```
-
-### 4. Running the Application
-* **Start Local Development Server**:
-  ```bash
-  npm start
-  ```
-  Open your browser to `http://localhost:8123` to interact with the live website.
 
 ---
 
-## 🚀 Vercel Production Deployment
-
-To publish updates to Vercel:
-
-```bash
-# Trigger production deployment via Vercel CLI
-npx vercel --prod
-```
-
-Or connect the repository directly in your **[Vercel Dashboard](https://vercel.com/new)**. Vercel automatically detects `vercel.json` and builds the static pages alongside serverless API functions in `/api`.
-
----
-
-## 📜 License & Credits
+## 📜 License
 
 Created for **LUMINA Fine Dining & Lounge** — All Rights Reserved.
