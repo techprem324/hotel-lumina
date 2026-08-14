@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="luminaGlow" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff7b00"/>
+      <stop offset="100%" stop-color="#ffb700"/>
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="20" fill="#121b28"/>
+  <g fill="none" stroke="url(#luminaGlow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Radiant Fan Petals -->
+    <path d="M 50 64 L 46 25 L 50 14 L 54 25 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 36 29 L 38 18 L 44 28 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 64 29 L 62 18 L 56 28 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 26 38 L 26 27 L 35 36 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 74 38 L 74 27 L 65 36 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 18 50 L 16 40 L 28 46 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 82 50 L 84 40 L 72 46 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 12 62 L 9 52 L 22 57 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <path d="M 50 64 L 88 62 L 91 52 L 78 57 Z" fill="#ff7b00" fill-opacity="0.2"/>
+    <!-- Base Arch -->
+    <path d="M 38 64 A 12 12 0 0 1 62 64" fill="url(#luminaGlow)"/>
+  </g>
+</svg>
