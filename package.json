@@ -1,0 +1,17 @@
+{
+  "name": "ht",
+  "version": "1.0.0",
+  "description": "> **Where Culinary Excellence Meets Radiant Luxury**   > An ultra-premium, responsive, multi-page web platform designed for **LUMINA**, an elite fine-dining establishment serving Mughlai, Indian, Chinese, and Continental culinary masterpieces.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.5.0"
+  }
+}

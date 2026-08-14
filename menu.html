@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — LUMINA | Fine Dining &amp; Lounge</title>
+  <meta name="description" content="Browse the full LUMINA menu — appetizers, main courses, breads, desserts, beverages and seafood. Filter by category and dietary preference.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html" aria-label="LUMINA home">
+        <svg class="logo__emblem" viewBox="0 0 100 68" aria-hidden="true"><defs><linearGradient id="menuHdrGlow" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ff7b00"/><stop offset="100%" stop-color="#ffc800"/></linearGradient></defs><g fill="none" stroke="url(#menuHdrGlow)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M 50 64 L 46 25 L 50 14 L 54 25 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 36 29 L 38 18 L 44 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 64 29 L 62 18 L 56 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 26 38 L 26 27 L 35 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 74 38 L 74 27 L 65 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 18 50 L 16 40 L 28 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 82 50 L 84 40 L 72 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 12 62 L 9 52 L 22 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 88 62 L 91 52 L 78 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 38 64 A 12 12 0 0 1 62 64" fill="url(#menuHdrGlow)"/></g></svg>
+        <span>LUMINA</span>
+      </a>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="index.html#about">About</a>
+        <a class="nav__link is-active" href="menu.html">Menu</a>
+        <a class="nav__link" href="gallery.html">Gallery</a>
+        <a class="nav__link" href="index.html#location">Contact</a>
+        <a class="btn btn--gold nav__cta" href="index.html#reserve">Book a Table</a>
+      </nav>
+
+      <button class="header__burger" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero page-hero--menu">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Home</a> / Menu</p>
+        <h1>Our Menu</h1>
+        <p class="eyebrow">Ninety Plates, One Standard</p>
+      </div>
+    </section>
+
+    <section class="section section--cream">
+      <div class="container">
+        <div class="menu-toolbar reveal">
+          <div class="menu-tabs" role="tablist" aria-label="Menu categories">
+            <button class="menu-tab is-active" data-filter="all">All</button>
+            <button class="menu-tab" data-filter="appetizer">Appetizers</button>
+            <button class="menu-tab" data-filter="main">Main Course</button>
+            <button class="menu-tab" data-filter="bread">Breads</button>
+            <button class="menu-tab" data-filter="dessert">Desserts</button>
+            <button class="menu-tab" data-filter="beverage">Beverages</button>
+            <button class="menu-tab" data-filter="seafood">Seafood</button>
+          </div>
+          <div class="menu-search">
+            <label class="sr-only" for="menu-search-input">Search menu</label>
+            <input id="menu-search-input" type="search" placeholder="Search dishes…" autocomplete="off">
+          </div>
+        </div>
+
+        <p class="menu-count" id="menu-count" aria-live="polite" style="font-size:.85rem;color:#8a857c;margin-bottom:22px"></p>
+
+        <div class="menu-list" id="menu-list">
+
+          <section class="menu-section" data-category="appetizer">
+            <h3 class="menu-section__title">Appetizers</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=400&q=80" alt="Crisp samosas with mint chutney" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Samosa Trio</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹290</span></div>
+              <p>Hand-folded pastry, spiced potato &amp; pea, smoked tamarind chutney.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=400&q=80" alt="Paneer tikka skewers with charred peppers" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Paneer Tikka</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹380</span></div>
+              <p>Malai-marinated cottage cheese, charred in the tandoor, mint yogurt.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80" alt="Galouti kebab served on a toasted mini paratha" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Galouti Kebab</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹460</span></div>
+              <p>Melt-in-the-mouth minced lamb, 25 spices, rose petals, silver leaf.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=400&q=80" alt="Veg spring rolls with sweet chilli dip" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Veg Spring Rolls</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹320</span></div>
+              <p>Glass noodles and julienned vegetables, crispy shell, sweet chilli.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+
+          <section class="menu-section" data-category="main">
+            <h3 class="menu-section__title">Main Course</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=400&q=80" alt="Murgh makhani butter chicken curry" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Murgh Makhani</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹620</span></div>
+              <p>Tandoor-charred chicken in silken tomato-butter gravy, kasuri methi.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=400&q=80" alt="Dal makhani in a black clay pot" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Dal Makhani</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹420</span></div>
+              <p>Black lentils simmered 24 hours, smoked butter, fresh cream.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=400&q=80" alt="Chicken biryani with saffron basmati rice" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Hyderabadi Biryani</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹540</span></div>
+              <p>Dum-sealed basmati, saffron, kewra, served with mirchi ka salan.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i class="lit">●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80" alt="Paneer lababdar curry with Indian bread" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Paneer Lababdar</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹460</span></div>
+              <p>Cottage cheese in tomato-cashew gravy, ginger juliennes.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80" alt="Mutton rogan josh with rich red gravy" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Mutton Rogan Josh</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹720</span></div>
+              <p>Kashmiri chillies and fennel, braised shoulder of lamb.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i class="lit">●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=400&q=80" alt="Truffle tagliatelle with shaved parmesan" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Truffle Tagliatelle</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹680</span></div>
+              <p>Hand-rolled pasta, black truffle cream, aged parmesan.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+
+          <section class="menu-section" data-category="bread">
+            <h3 class="menu-section__title">Breads</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&q=80" alt="Basket of freshly baked naan" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Naan Basket</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹160</span></div>
+              <p>Garlic, butter and truffle naans, blistered at 480°.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=400&h=300&q=80" alt="Laccha paratha with flaky layers" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Laccha Paratha</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹90</span></div>
+              <p>Flaky whole-wheat layers, brushed with ghee.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+
+          <section class="menu-section" data-category="dessert">
+            <h3 class="menu-section__title">Desserts</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=400&q=80" alt="Gulab jamun with berries and gold leaf" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Gulab Jamun Crèmeux</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹340</span></div>
+              <p>Warm saffron dumplings, cardamom custard, gold leaf.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80" alt="Chocolate fondant with molten centre" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Chocolate Fondant</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹420</span></div>
+              <p>70% dark chocolate, salted caramel core, vanilla bean ice cream.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" alt="Kesar kulfi with pistachio and rose" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Kesar Kulfi</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹260</span></div>
+              <p>Slow-reduced milk, saffron, pistachio brittle.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+
+          <section class="menu-section" data-category="beverage">
+            <h3 class="menu-section__title">Beverages</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=400&q=80" alt="Gold Rush Martini cocktail" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Gold Rush Martini</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹520</span></div>
+              <p>Honey-infused bourbon, lemon, edible gold dust.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=400&q=80" alt="Earl Grey fizz cocktail at the bar" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Earl Grey Fizz</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹460</span></div>
+              <p>Tea-infused gin, citrus, lavender tonic.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&q=80" alt="Virgin mojito mocktail with mint and lime" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Virgin Mojito</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹240</span></div>
+              <p>Fresh mint, lime, soda — as made in Old Havana.</p>
+              <div class="menu-row__tags"><span class="tag-veg">Veg</span><span class="tag-spice"><i class="lit">●</i><i>●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+
+          <section class="menu-section" data-category="seafood">
+            <h3 class="menu-section__title">Seafood</h3>
+            <div class="menu-section__grid">
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" alt="Crispy fried calamari with lemon aioli" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Crispy Calamari</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹540</span></div>
+              <p>Corn-flour crust, chilli-lime aioli, charred lemon.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i>●</i></span></div>
+            </div>
+          </article>
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=400&q=80" alt="Grilled king prawns with charred lemon" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Grilled King Prawns</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹780</span></div>
+              <p>Chilli-garlic butter, charred lemon, micro greens.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i>●</i></span></div>
+            </div>
+          </article>
+
+          <article class="menu-row reveal">
+            <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=400&h=300&q=80" alt="Goan fish curry with coconut and kokum" loading="lazy">
+            <div>
+              <div class="menu-row__head"><h3>Goan Fish Curry</h3><span class="menu-row__dots"></span><span class="menu-row__price">₹560</span></div>
+              <p>Kingfish in coconut-kokum curry, steamed rice.</p>
+              <div class="menu-row__tags"><span class="tag-nonveg">Non-Veg</span><span class="tag-spice"><i class="lit">●</i><i class="lit">●</i><i>●</i></span></div>
+            </div>
+          </article>
+            </div>
+          </section>
+        </div>
+
+        <p class="menu-empty" id="menu-empty" hidden>No dishes match your search. Try a different keyword or category.</p>
+
+        <div class="menu-actions">
+          <button class="btn btn--outline-dark" onclick="window.print()">Print Menu</button>
+          <a class="btn btn--gold" href="index.html#reserve">Book a Table</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__about">
+          <a class="logo" href="index.html">
+            <svg class="logo__emblem" viewBox="0 0 100 68" aria-hidden="true"><defs><linearGradient id="menuFtrGlow" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ff7b00"/><stop offset="100%" stop-color="#ffc800"/></linearGradient></defs><g fill="none" stroke="url(#menuFtrGlow)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M 50 64 L 46 25 L 50 14 L 54 25 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 36 29 L 38 18 L 44 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 64 29 L 62 18 L 56 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 26 38 L 26 27 L 35 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 74 38 L 74 27 L 65 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 18 50 L 16 40 L 28 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 82 50 L 84 40 L 72 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 12 62 L 9 52 L 22 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 88 62 L 91 52 L 78 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 38 64 A 12 12 0 0 1 62 64" fill="url(#menuFtrGlow)"/></g></svg>
+            <span>LUMINA</span>
+          </a>
+          <p>A fine-dining destination where royal Mughlai tradition meets modern European craft — in the heart of the city since 1998.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V5h-3a4 4 0 0 0-4 4v2H7v3h3v7h3v-7h3l1-3h-4V9a1 1 0 0 1 1-1z"/></svg></a>
+            <a href="#" aria-label="X (Twitter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.3l-4.9-6.4L5 21H1.9l7.3-8.3L2.2 3h6.4l4.4 5.9L17.5 3zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.5c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9z"/></svg></a>
+          </div>
+        </div>
+
+        <nav class="footer__links" aria-label="Footer navigation">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="index.html#reserve">Reservations</a></li>
+            <li><a href="index.html#events">Private Events</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__hours">
+          <h4>Opening Hours</h4>
+          <ul>
+            <li><span>Monday — Friday</span><time>12:00 – 23:30</time></li>
+            <li><span>Saturday</span><time>12:00 – 00:30</time></li>
+            <li><span>Sunday</span><time>11:30 – 23:30</time></li>
+            <li><span>Bar &amp; Lounge</span><time>Until 01:00</time></li>
+          </ul>
+        </div>
+
+        <div class="newsletter">
+          <h4>Stay in the Loop</h4>
+          <p>Seasonal menus, chef's table evenings and member-only tastings — once a month, no noise.</p>
+          <form class="newsletter__form" id="newsletter-form" novalidate>
+            <label for="newsletter-email" class="sr-only">Email address</label>
+            <input id="newsletter-email" type="email" placeholder="Your email address" autocomplete="email">
+            <button type="submit" aria-label="Subscribe">→</button>
+          </form>
+          <p class="form__status" role="status" aria-live="polite"></p>
+          <p class="newsletter__note">We respect your inbox. Unsubscribe anytime.</p>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© <span class="js-year">2026</span> LUMINA. All rights reserved.</p>
+        <div class="footer__partners">
+          <span>Order via</span>
+          <strong>Zomato</strong><strong>Swiggy</strong><strong>Dineout</strong>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button class="to-top" aria-label="Back to top">↑</button>
+
+  <script src="js/main.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>
