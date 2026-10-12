@@ -1,125 +1,88 @@
-# 🌟 LUMINA — Celestial Fine Dining Platform
-
-> **Where Royal Culinary Masterpieces Meet Cutting-Edge Automation**
-
+# LUMINA — Celestial Fine Dining Platform
+ 
+> Where royal culinary masterpieces meet cutting-edge automation.
+ 
 [![Live Vercel Platform](https://img.shields.io/badge/Vercel-Live%20Platform-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hotel-lumina-m.vercel.app/)
-
+ 
+**Live Demo:** [Lumina Live Platform](https://hotel-lumina-m.vercel.app/)
+ 
 ---
-
-## 🌐 Production Live Deployment
-
-👉 **[Lumina Live Platform](https://hotel-lumina-m.vercel.app/)**
-
+ 
+## Overview
+ 
+LUMINA is a multi-page fine-dining website with table reservations and a host desk inquiry form. The frontend is served from Vercel's edge network, and bookings and inquiries are stored in MongoDB Atlas through serverless API routes.
+ 
 ---
-
-## 📊 System Architecture & Workflow
-
+ 
+## Architecture
+ 
 ```mermaid
-flowchart TD
-    subgraph Client ["FOH Client Layer"]
-        A["🌐 Guest Browser"] -->|Navigates Pages| B["📄 Multi-Page HTML5 / CSS3 / JS"]
-        B --> C["📅 Table Reservation Form"]
-        B --> D["📩 Host Desk Inquiry Form"]
-    end
-
-    subgraph Edge ["Vercel Edge Platform"]
-        B -->|Static CDN Hosting| E["⚡ Vercel Edge Network"]
-        C -->|POST /api/reservations| F["λ Serverless Booking Function"]
-        D -->|POST /api/contact| G["λ Serverless Contact Function"]
-    end
-
-    subgraph Database ["Cloud Database Layer"]
-        F -->|Bson Insert| H[("🍃 MongoDB Atlas<br/>lumina_db.reservations")]
-        G -->|Bson Insert| I[("🍃 MongoDB Atlas<br/>lumina_db.inquiries")]
-    end
+flowchart LR
+    A["Guest Browser"] --> B["Static Frontend<br/>HTML5 / CSS3 / JS"]
+    B -->|POST /api/reservations| C["Serverless Function"]
+    B -->|POST /api/contact| D["Serverless Function"]
+    C --> E[("MongoDB Atlas<br/>reservations")]
+    D --> F[("MongoDB Atlas<br/>inquiries")]
 ```
-
+ 
+**Reservation flow:** the guest selects date, time, party size and seating zone, then submits the form. The API stores the booking in MongoDB and returns a booking reference. If the database is offline, a local reference is returned as a fallback.
+ 
 ---
-
-## 🔁 Reservation & Order Workflow
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Guest as 👤 Diner
-    participant UI as 🖥️ Lumina Client UI
-    participant API as ⚡ Vercel API (/api/reservations)
-    participant DB as 🍃 MongoDB Atlas (lumina_db)
-
-    Guest->>UI: Select Date, Time, Party & Seating Zone
-    Guest->>UI: Submit Booking Request
-    UI->>API: POST /api/reservations (JSON Payload)
-    alt MongoDB Online
-        API->>DB: insertOne(reservation)
-        DB-->>API: { insertedId }
-        API-->>UI: 201 Created (Booking Ref #ID)
-    else DB Offline Fallback
-        API-->>UI: 201 Created (Local Booking Ref)
-    end
-    UI-->>Guest: 🎉 Interactive Confirmation & Ref Badge
-```
-
+ 
+## Tech Stack
+ 
+| Layer | Technology |
+| :--- | :--- |
+| Frontend | HTML5, CSS3, ES6+ JavaScript |
+| Typography | Google Fonts (Playfair Display, Inter) |
+| Backend | Vercel Serverless Functions (Node.js) |
+| Local Server | Node.js (`server.js`) |
+| Database | MongoDB Atlas |
+| Assets | SVG vectors, Unsplash CDN with image fallbacks |
+ 
 ---
-
-## 💻 Tech Stack Summary
-
-| Layer | Technology | Purpose |
+ 
+## Pages
+ 
+| Page | File | Features |
 | :--- | :--- | :--- |
-| **Frontend UI** | HTML5, CSS3, ES6+ JS | Multi-page, glassmorphic UI, responsive layouts |
-| **Typography** | Google Fonts (*Playfair Display*, *Inter*) | Premium fine-dining serif & sans-serif fonts |
-| **Edge Serverless** | Vercel Serverless Functions | Node.js microservices for API routes |
-| **Local Engine** | Node.js (`server.js`) | Standalone HTTP server for offline testing |
-| **Database** | MongoDB Atlas | Cloud NoSQL persistence for reservations & inquiries |
-| **Icons & Assets** | SVG Vectors & Unsplash HD CDN | High-res culinary photography with safe image fallbacks |
-
+| Home | `index.html` | Hero carousel, signature cuisines, VIP seating map, reservation widget |
+| Menu | `menu.html` | Live search, category tabs, dietary filters (Veg, Halal, GF), spice meters, wine pairings |
+| Gallery | `gallery.html` | 360° venue photos with lightbox viewer |
+| Contact | `contact.html` | Inquiry form, phone, opening hours, valet and dress code FAQ |
+ 
 ---
-
-## 🗺️ Page Routes & Features
-
-| Page | File | Core Functionality |
-| :--- | :--- | :--- |
-| **Home** | `index.html` | Hero carousel, 5 Master Cuisines, Chef's Signatures, VIP Seating Map, Reservation Widget |
-| **Menu** | `menu.html` | Live search, category tabs, dietary filter pills (*Veg*, *Halal*, *GF*), spice meters, wine pairings |
-| **Gallery** | `gallery.html` | 360° architectural photos (Dining Hall, Alfresco, Velvet Bar, Salons) with Lightbox viewer |
-| **Contact** | `contact.html` | Host desk form, direct phone, operating hours, valet parking policy, dress code FAQ accordion |
-
----
-
-## 🔌 API Endpoints Reference
-
-| Endpoint | Method | Input Parameters | Output Response |
+ 
+## API Reference
+ 
+| Endpoint | Method | Input | Response |
 | :--- | :--- | :--- | :--- |
-| `/api/reservations` | `POST` | `name`, `email`, `phone`, `guests`, `date`, `time`, `requests` | `{ success: true, bookingId, reservation }` |
-| `/api/reservations` | `GET` | None | `{ success: true, count, reservations: [] }` |
-| `/api/contact` | `POST` | `name`, `email`, `phone`, `subject`, `message` | `{ success: true, inquiryId }` |
-
+| `/api/reservations` | `POST` | `name`, `email`, `phone`, `guests`, `date`, `time`, `requests` | `{ success, bookingId, reservation }` |
+| `/api/reservations` | `GET` | None | `{ success, count, reservations }` |
+| `/api/contact` | `POST` | `name`, `email`, `phone`, `subject`, `message` | `{ success, inquiryId }` |
+ 
 ---
-
-## 🔑 Environment Variables Configuration
-
-| Variable | Description | Example Value |
+ 
+## Environment Variables
+ 
+| Variable | Description | Example |
 | :--- | :--- | :--- |
-| `MONGODB_URI` | MongoDB Atlas Connection String | `mongodb+srv://user:pass@cluster.mongodb.net/lumina_db` |
-| `PORT` | Local Server Port | `8123` |
-
+| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/lumina_db` |
+| `PORT` | Local server port | `8123` |
+ 
 ---
-
-## ⚡ Local Setup Commands
-
+ 
+## Getting Started
+ 
 ```bash
-# 1. Clone repository
 git clone https://github.com/techprem324/hotel-lumina.git
 cd hotel-lumina
-
-# 2. Install dependencies
 npm install
-
-# 3. Start local development server (Port 8123)
-npm start
+npm start   # runs on port 8123
 ```
-
+ 
 ---
-
-## 📜 License
-
+ 
+## License
+ 
 Created for **LUMINA Fine Dining & Lounge** — All Rights Reserved.
