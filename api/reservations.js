@@ -1,5 +1,6 @@
 const { getDatabase } = require('../lib/database');
 const { normalizeTableReservation } = require('../lib/booking-validation');
+const { sendBookingNotification } = require('../lib/booking-notification');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -38,10 +39,16 @@ module.exports = async (req, res) => {
 
     const record = { ...reservation, createdAt: new Date(), status: 'pending' };
     const result = await db.collection('reservations').insertOne(record);
+    const bookingId = result.insertedId.toString();
+    const notification = await sendBookingNotification({ kind: 'table', bookingId, details: reservation });
     return res.status(201).json({
       success: true,
-      message: 'Reservation request received.',
-      bookingId: result.insertedId.toString(),
+      message: notification.sent
+        ? 'Reservation request received and email notification sent.'
+        : 'Reservation request saved, but the email notification could not be sent.',
+      bookingId,
+      notificationSent: notification.sent,
+      ...(notification.sent ? {} : { notificationWarning: notification.reason }),
       reservation: record,
     });
   } catch (error) {

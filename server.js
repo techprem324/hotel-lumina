@@ -3,6 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { getDatabase } = require('./lib/database');
+const { sendBookingNotification } = require('./lib/booking-notification');
 const { normalizeTableReservation, normalizeStayRequest } = require('./lib/booking-validation');
 
 const PORT = process.env.PORT || 8123;
@@ -112,10 +113,16 @@ async function handleBooking(req, res, kind) {
     const collection = kind === 'table' ? 'reservations' : 'stayRequests';
     const record = { ...booking, createdAt: new Date(), status: 'pending' };
     const result = await db.collection(collection).insertOne(record);
+    const bookingId = result.insertedId.toString();
+    const notification = await sendBookingNotification({ kind, bookingId, details: booking });
     sendJson(res, 201, {
       success: true,
-      message: kind === 'table' ? 'Reservation request received.' : 'Stay request received.',
-      bookingId: result.insertedId.toString(),
+      message: notification.sent
+        ? `${kind === 'table' ? 'Reservation' : 'Stay'} request received and email notification sent.`
+        : `${kind === 'table' ? 'Reservation' : 'Stay'} request saved, but the email notification could not be sent.`,
+      bookingId,
+      notificationSent: notification.sent,
+      ...(notification.sent ? {} : { notificationWarning: notification.reason }),
     });
   } catch (error) {
     console.error(`${kind} booking error:`, error);

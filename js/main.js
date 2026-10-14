@@ -71,15 +71,16 @@
 
   const arrival = $('#stay-arrival');
   const departure = $('#stay-departure');
+  const updateDepartureMin = () => {
+    if (!departure) return;
+    const minimum = arrival?.value
+      ? new Date(`${arrival.value}T00:00:00`)
+      : new Date(`${todayString}T00:00:00`);
+    minimum.setDate(minimum.getDate() + 1);
+    departure.min = formatDate(minimum);
+    if (departure.value && departure.value < departure.min) departure.value = '';
+  };
   if (arrival && departure) {
-    const updateDepartureMin = () => {
-      const minimum = arrival.value
-        ? new Date(`${arrival.value}T00:00:00`)
-        : new Date(`${todayString}T00:00:00`);
-      minimum.setDate(minimum.getDate() + 1);
-      departure.min = formatDate(minimum);
-      if (departure.value && departure.value < departure.min) departure.value = '';
-    };
     arrival.addEventListener('change', updateDepartureMin);
     updateDepartureMin();
   }
@@ -228,12 +229,14 @@
         }
 
         const ref = result.bookingId ? ` Reference: ${String(result.bookingId).slice(-6).toUpperCase()}.` : '';
-        const message = form.id === 'table-booking'
+        const bookingMessage = form.id === 'table-booking'
           ? `Your table request has been received. Our team will contact you to confirm.${ref}`
-          : form.id === 'stay-booking'
-            ? `Your stay request has been received. We’ll contact you to confirm availability and rates.${ref}`
-            : result.message || 'Thank you. We have received your message.';
-        setStatus(status, 'ok', message);
+          : `Your stay request has been received. We’ll contact you to confirm availability and rates.${ref}`;
+        const message = form.id === 'table-booking' || form.id === 'stay-booking'
+          ? result.notificationSent ? `${bookingMessage} An email alert was sent to LUMINA.`
+            : `${bookingMessage} Email alert unavailable: ${result.notificationWarning || 'please contact LUMINA directly.'}`
+          : result.message || 'Thank you. We have received your message.';
+        setStatus(status, result.notificationSent === false ? 'warning' : 'ok', message);
         form.reset();
         updateDepartureMin();
       } catch (error) {

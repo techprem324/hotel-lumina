@@ -3038,6 +3038,87 @@ body {
   text-align: center;
 }
 
+.form__status--warning {
+  background: #fbf3e7;
+  color: #745326;
+  border: 1px solid rgba(181, 138, 82, 0.4);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  columns: unset;
+}
+
+.gallery-grid .ambiance__item {
+  aspect-ratio: 1.28;
+  margin: 0;
+  border-radius: 5px;
+}
+
+.gallery-grid .ambiance__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-grid .ambiance__item:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.form__field input,
+.form__field select,
+.form__field textarea {
+  min-height: 50px;
+  font-size: 16px;
+  touch-action: manipulation;
+}
+
+.form__field textarea {
+  min-height: 110px;
+}
+
+.form__field input[type="checkbox"],
+.form__field input[type="radio"] {
+  min-height: auto;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--gold);
+}
+
+.booking-form .form__field input,
+.booking-form .form__field select,
+.booking-form .form__field textarea {
+  font-size: 16px;
+}
+
+.booking-tab,
+.booking-form .form__submit,
+.home-hero__actions .btn,
+.home-booking__actions .btn {
+  min-height: 50px;
+  touch-action: manipulation;
+}
+
+.btn:focus-visible,
+.booking-tab:focus-visible,
+.text-link:focus-visible,
+.nav__link:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.booking-form .form__submit:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.booking-form .form__submit.is-loading {
+  pointer-events: none;
+}
+
 .header__burger:focus-visible,
 .booking-tab:focus-visible,
 .home-hero__scroll:focus-visible {
@@ -3090,6 +3171,11 @@ body {
 }
 
 @media (max-width: 767px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
   .home-hero {
     min-height: 740px;
     min-height: 88svh;
@@ -3184,6 +3270,14 @@ body {
 }
 
 @media (max-width: 639px) {
+  .gallery-grid {
+    gap: 10px;
+  }
+
+  .gallery-grid .ambiance__item {
+    aspect-ratio: 1;
+  }
+
   .header__inner {
     gap: 12px;
   }
