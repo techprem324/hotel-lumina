@@ -1,88 +1,70 @@
-# LUMINA — Celestial Fine Dining Platform
- 
-> Where royal culinary masterpieces meet cutting-edge automation.
- 
-[![Live Vercel Platform](https://img.shields.io/badge/Vercel-Live%20Platform-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hotel-lumina-m.vercel.app/)
- 
-**Live Demo:** [Lumina Live Platform](https://hotel-lumina-m.vercel.app/)
- 
----
- 
+# LUMINA — Hotel & Dining
+
+> Thoughtful stays and good things around the table.
+
+[Live website](https://hotel-lumina-m.vercel.app/) · [GitHub repository](https://github.com/techprem324/hotel-lumina)
+
 ## Overview
- 
-LUMINA is a multi-page fine-dining website with table reservations and a host desk inquiry form. The frontend is served from Vercel's edge network, and bookings and inquiries are stored in MongoDB Atlas through serverless API routes.
- 
----
- 
+
+LUMINA is a responsive hotel and dining website with separate pages for stays, the restaurant, venue spaces and contact details. Guests can request a room or reserve a dining table with a seating preference. Requests are stored in MongoDB Atlas and remain pending until the team confirms availability.
+
 ## Architecture
- 
+
 ```mermaid
 flowchart LR
     A["Guest Browser"] --> B["Static Frontend<br/>HTML5 / CSS3 / JS"]
     B -->|POST /api/reservations| C["Serverless Function"]
-    B -->|POST /api/contact| D["Serverless Function"]
+    B -->|POST /api/stays| D["Serverless Function"]
+    B -->|POST /api/contact| G["Serverless Function"]
     C --> E[("MongoDB Atlas<br/>reservations")]
-    D --> F[("MongoDB Atlas<br/>inquiries")]
+    D --> F[("MongoDB Atlas<br/>stayRequests")]
+    G --> H[("MongoDB Atlas<br/>inquiries")]
 ```
- 
-**Reservation flow:** the guest selects date, time, party size and seating zone, then submits the form. The API stores the booking in MongoDB and returns a booking reference. If the database is offline, a local reference is returned as a fallback.
- 
----
- 
-## Tech Stack
- 
-| Layer | Technology |
-| :--- | :--- |
-| Frontend | HTML5, CSS3, ES6+ JavaScript |
-| Typography | Google Fonts (Playfair Display, Inter) |
-| Backend | Vercel Serverless Functions (Node.js) |
-| Local Server | Node.js (`server.js`) |
-| Database | MongoDB Atlas |
-| Assets | SVG vectors, Unsplash CDN with image fallbacks |
- 
----
- 
+
+Guests select a room or table, enter their details and submit a request. The API returns a reference after MongoDB saves it. Requests are not confirmed until the LUMINA team checks availability and follows up. If MongoDB is unavailable or `MONGODB_URI` is missing, the API returns an error instead of showing a false confirmation.
+
 ## Pages
- 
+
 | Page | File | Features |
 | :--- | :--- | :--- |
-| Home | `index.html` | Hero carousel, signature cuisines, VIP seating map, reservation widget |
-| Menu | `menu.html` | Live search, category tabs, dietary filters (Veg, Halal, GF), spice meters, wine pairings |
-| Gallery | `gallery.html` | 360° venue photos with lightbox viewer |
-| Contact | `contact.html` | Inquiry form, phone, opening hours, valet and dress code FAQ |
- 
----
- 
+| Home | `index.html` | Curated introduction, room highlights, dining and booking links |
+| Stay | `stay.html` | Room types, amenities and stay-request links |
+| About | `about.html` | LUMINA story and hospitality principles |
+| Book | `reserve.html` | Table reservations with seating choices and stay requests |
+| Dining | `menu.html` | Searchable menu, category tabs and dietary filters |
+| Spaces | `gallery.html` | Venue photography with lightbox viewer |
+| Contact | `contact.html` | Inquiry form, concierge phone numbers and opening hours |
+
 ## API Reference
- 
+
 | Endpoint | Method | Input | Response |
 | :--- | :--- | :--- | :--- |
-| `/api/reservations` | `POST` | `name`, `email`, `phone`, `guests`, `date`, `time`, `requests` | `{ success, bookingId, reservation }` |
-| `/api/reservations` | `GET` | None | `{ success, count, reservations }` |
+| `/api/reservations` | `POST` | `name`, `email`, `phone`, `guests`, `date`, `time`, `seatingPreference`, `requests` | `{ success, bookingId, reservation }` |
+| `/api/stays` | `POST` | `name`, `email`, `phone`, `roomType`, `checkIn`, `checkOut`, `guests`, `rooms`, `requests` | `{ success, bookingId, stayRequest }` |
 | `/api/contact` | `POST` | `name`, `email`, `phone`, `subject`, `message` | `{ success, inquiryId }` |
- 
----
- 
-## Environment Variables
- 
-| Variable | Description | Example |
-| :--- | :--- | :--- |
-| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/lumina_db` |
-| `PORT` | Local server port | `8123` |
- 
----
- 
-## Getting Started
- 
+
+Booking requests are saved with `status: "pending"`; no room or table inventory is claimed by this request form. Guest reservation records are not exposed through a public list endpoint.
+
+## Setup
+
+Requirements: Node.js 18 or newer and a MongoDB Atlas URI.
+
 ```bash
 git clone https://github.com/techprem324/hotel-lumina.git
 cd hotel-lumina
 npm install
-npm start   # runs on port 8123
+npm start
 ```
- 
----
- 
-## License
- 
-Created for **LUMINA Fine Dining & Lounge** — All Rights Reserved.
+
+Set `MONGODB_URI` in the local environment (or Vercel project settings) for booking and inquiry submissions. Without it, forms return an explicit service-unavailable message. The local server runs on port `8123` by default.
+
+```bash
+npm test
+npm run build
+```
+
+The build copies all pages and assets to `public/` (Vercel output) and `dist/`.
+
+## Deployment
+
+Vercel builds with `npm run build` and serves `public/`. Configure `MONGODB_URI` for the Production, Preview and Development environments where booking requests should be accepted.

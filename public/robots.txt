@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lumina.example.com/sitemap.xml
+Sitemap: https://hotel-lumina-m.vercel.app/sitemap.xml

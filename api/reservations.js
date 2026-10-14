@@ -1,88 +1,51 @@
-const { MongoClient } = require('mongodb');
-
-const MONGODB_URI = process.env.MONGODB_URI;
-
-let cachedDb = null;
-
-async function connectToDatabase() {
-  if (cachedDb) return cachedDb;
-  if (!MONGODB_URI) {
-    console.warn('MONGODB_URI is not set in Vercel Environment Variables.');
-    return null;
-  }
-  try {
-    const client = new MongoClient(MONGODB_URI);
-    await client.connect();
-    const db = client.db('lumina_db');
-    cachedDb = db;
-    return db;
-  } catch (e) {
-    console.error('MongoDB connection error:', e);
-    return null;
-  }
-}
+const { getDatabase } = require('../lib/database');
+const { normalizeTableReservation } = require('../lib/booking-validation');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (req.method === 'OPTIONS') return res.status(204).end();
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Method Not Allowed' });
+  }
+
+  let data;
+  try {
+    data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  } catch {
+    return res.status(400).json({ success: false, error: 'Invalid JSON request body.' });
+  }
+
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return res.status(400).json({ success: false, error: 'Invalid reservation details.' });
+  }
+
+  const reservation = normalizeTableReservation(data);
+  if (!reservation) {
+    return res.status(400).json({ success: false, error: 'Please provide valid reservation details.' });
   }
 
   try {
-    const db = await connectToDatabase();
-
-    if (req.method === 'GET') {
-      if (!db) {
-        return res.status(200).json({ success: true, count: 0, reservations: [], note: 'Database offline or MONGODB_URI not configured.' });
-      }
-      const list = await db.collection('reservations').find().sort({ createdAt: -1 }).toArray();
-      return res.status(200).json({ success: true, count: list.length, reservations: list });
+    const db = await getDatabase();
+    if (!db) {
+      return res.status(503).json({
+        success: false,
+        error: 'Online booking is temporarily unavailable. Please call our concierge.',
+      });
     }
 
-    if (req.method === 'POST') {
-      const data = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-      if (!data.name || !data.email || !data.phone || !data.guests || !data.date || !data.time) {
-        return res.status(400).json({ success: false, error: 'Missing required reservation fields.' });
-      }
-
-      const reservation = {
-        name: String(data.name).trim(),
-        email: String(data.email).trim(),
-        phone: String(data.phone).trim(),
-        guests: String(data.guests),
-        date: String(data.date),
-        time: String(data.time),
-        requests: String(data.requests || '').trim(),
-        createdAt: new Date(),
-        status: 'confirmed'
-      };
-
-      if (db) {
-        const result = await db.collection('reservations').insertOne(reservation);
-        return res.status(201).json({
-          success: true,
-          message: 'Reservation booked successfully!',
-          bookingId: result.insertedId,
-          reservation
-        });
-      } else {
-        // Fallback for Vercel preview if DB string is not linked
-        const fakeId = 'LUM-' + Math.floor(100000 + Math.random() * 900000);
-        return res.status(201).json({
-          success: true,
-          message: 'Reservation confirmed locally! (To persist permanently, add MONGODB_URI in Vercel settings)',
-          bookingId: fakeId,
-          reservation
-        });
-      }
-    }
-
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  } catch (err) {
-    console.error('API Error:', err);
-    return res.status(500).json({ success: false, error: err.message || 'Internal Server Error' });
+    const record = { ...reservation, createdAt: new Date(), status: 'pending' };
+    const result = await db.collection('reservations').insertOne(record);
+    return res.status(201).json({
+      success: true,
+      message: 'Reservation request received.',
+      bookingId: result.insertedId.toString(),
+      reservation: record,
+    });
+  } catch (error) {
+    console.error('Reservation API error:', error);
+    return res.status(500).json({ success: false, error: 'Unable to save your request. Please try again.' });
   }
 };

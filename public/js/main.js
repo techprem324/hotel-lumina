@@ -1,347 +1,327 @@
-/* ============================================================
-   LUMINA — shared site behaviour
-   ============================================================ */
+/* LUMINA shared site behaviour */
 (function () {
   'use strict';
 
-  const $ = (sel, ctx = document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
-
-  /* ---------- Sticky header ---------- */
+  const $ = (selector, context = document) => context.querySelector(selector);
+  const $$ = (selector, context = document) => Array.from(context.querySelectorAll(selector));
   const header = $('.header');
-  const onScroll = () => {
+  document.documentElement.classList.add('js-enabled');
+
+  const updateHeader = () => {
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 40);
   };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
 
-  /* ---------- Mobile nav ---------- */
   const burger = $('.header__burger');
   const nav = $('.nav');
   if (burger && nav) {
     const toggleNav = (open) => {
       burger.classList.toggle('is-open', open);
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
       nav.classList.toggle('is-open', open);
       document.body.classList.toggle('nav-locked', open);
     };
     burger.addEventListener('click', () => toggleNav(!nav.classList.contains('is-open')));
-    $$('.nav a, .nav button').forEach((el) => el.addEventListener('click', () => toggleNav(false)));
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') toggleNav(false);
+    $$('.nav a, .nav button').forEach((item) => item.addEventListener('click', () => toggleNav(false)));
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') toggleNav(false);
     });
   }
 
-  /* ---------- Smooth anchor scrolling with header offset ---------- */
   $$('a[href^="#"]').forEach((link) => {
     const hash = link.getAttribute('href');
-    if (hash.length < 2) return; // bare "#" links (social icons, lightbox anchors)
-    link.addEventListener('click', (e) => {
-      const target = document.querySelector(hash);
+    if (!hash || hash.length < 2) return;
+    link.addEventListener('click', (event) => {
+      const target = $(hash);
       if (!target) return;
-      e.preventDefault();
-      const offset = (header ? header.offsetHeight : 0) + 16;
+      event.preventDefault();
+      const offset = (header ? header.offsetHeight : 0) + 12;
       window.scrollTo({
         top: target.getBoundingClientRect().top + window.scrollY - offset,
-        behavior: 'smooth',
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
       });
     });
   });
 
-  /* ---------- Scroll reveal ---------- */
-  const revealEls = $$('.reveal');
-  if ('IntersectionObserver' in window && revealEls.length) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    revealEls.forEach((el) => io.observe(el));
+  const revealItems = $$('.reveal');
+  if ('IntersectionObserver' in window && revealItems.length) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    revealItems.forEach((item) => observer.observe(item));
   } else {
-    revealEls.forEach((el) => el.classList.add('is-visible'));
+    revealItems.forEach((item) => item.classList.add('is-visible'));
   }
 
-  /* ---------- Hero slider ---------- */
-  const hero = $('.hero');
-  if (hero) {
-    const slides = $$('.hero__slide', hero);
-    const dots = $$('.hero__dot', hero);
-    let index = 0;
-    let timer;
+  const today = new Date();
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  const todayString = formatDate(today);
+  $$('[data-min-today]').forEach((input) => { input.min = todayString; });
 
-    const show = (i) => {
-      index = (i + slides.length) % slides.length;
-      slides.forEach((s, j) => s.classList.toggle('is-active', j === index));
-      dots.forEach((d, j) => d.classList.toggle('is-active', j === index));
+  const arrival = $('#stay-arrival');
+  const departure = $('#stay-departure');
+  if (arrival && departure) {
+    const updateDepartureMin = () => {
+      const minimum = arrival.value
+        ? new Date(`${arrival.value}T00:00:00`)
+        : new Date(`${todayString}T00:00:00`);
+      minimum.setDate(minimum.getDate() + 1);
+      departure.min = formatDate(minimum);
+      if (departure.value && departure.value < departure.min) departure.value = '';
     };
-
-    const play = () => {
-      clearInterval(timer);
-      timer = setInterval(() => show(index + 1), 5000);
-    };
-
-    dots.forEach((d, i) => d.addEventListener('click', () => {
-      show(i);
-      play();
-    }));
-
-    show(0);
-    play();
+    arrival.addEventListener('change', updateDepartureMin);
+    updateDepartureMin();
   }
 
-  /* ---------- Testimonial carousel ---------- */
-  const testi = $('.testi');
-  if (testi) {
-    const slides = $$('.testi__slide', testi);
-    let index = 0;
-    let timer;
+  const bookingTabs = $$('[data-booking-tab]');
+  const bookingForms = $$('[data-booking-form]');
+  const activateBookingType = (type) => {
+    bookingTabs.forEach((tab) => {
+      const active = tab.dataset.bookingTab === type;
+      tab.classList.toggle('is-active', active);
+      tab.setAttribute('aria-selected', String(active));
+      tab.setAttribute('tabindex', active ? '0' : '-1');
+    });
+    bookingForms.forEach((form) => { form.hidden = form.dataset.bookingForm !== type; });
+  };
+  bookingTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateBookingType(tab.dataset.bookingTab));
+    tab.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      const nextIndex = event.key === 'Home' ? 0
+        : event.key === 'End' ? bookingTabs.length - 1
+          : (index + (event.key === 'ArrowRight' ? 1 : -1) + bookingTabs.length) % bookingTabs.length;
+      bookingTabs[nextIndex].focus();
+      activateBookingType(bookingTabs[nextIndex].dataset.bookingTab);
+    });
+  });
 
-    const show = (i) => {
-      index = (i + slides.length) % slides.length;
-      slides.forEach((s, j) => s.classList.toggle('is-active', j === index));
-    };
-
-    const play = () => {
-      clearInterval(timer);
-      timer = setInterval(() => show(index + 1), 6000);
-    };
-
-    const prev = $('.testi__btn--prev', testi);
-    const next = $('.testi__btn--next', testi);
-    prev && prev.addEventListener('click', () => { show(index - 1); play(); });
-    next && next.addEventListener('click', () => { show(index + 1); play(); });
-
-    testi.addEventListener('mouseenter', () => clearInterval(timer));
-    testi.addEventListener('mouseleave', play);
-
-    show(0);
-    play();
+  if (bookingTabs.length) {
+    const query = new URLSearchParams(window.location.search);
+    const initialType = query.get('type') === 'stay' || window.location.hash === '#stay-booking' ? 'stay' : 'table';
+    activateBookingType(initialType);
+    const requestedRoom = query.get('room');
+    const roomNames = { classic: 'Classic Room', deluxe: 'Deluxe Room', suite: 'LUMINA Suite' };
+    const roomSelect = $('#stay-room');
+    if (roomSelect && roomNames[requestedRoom]) roomSelect.value = roomNames[requestedRoom];
+    if (initialType === 'stay' && window.location.hash === '#stay-booking') {
+      window.setTimeout(() => $('#stay-booking').scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+    }
   }
 
-  /* ---------- Back to top ---------- */
+  const lightbox = $('#lightbox');
+  if (lightbox) {
+    const image = $('.lightbox__img', lightbox);
+    const caption = $('.lightbox__caption', lightbox);
+    const closeButton = $('.lightbox__close', lightbox);
+    const previousButton = $('.lightbox__prev', lightbox);
+    const nextButton = $('.lightbox__next', lightbox);
+    let items = [];
+    let activeIndex = 0;
+
+    const showImage = (index) => {
+      const source = items[index]?.querySelector('img');
+      if (!source) return;
+      activeIndex = index;
+      image.src = source.src;
+      image.alt = source.alt || '';
+      caption.textContent = source.alt || '';
+      lightbox.classList.add('is-open');
+      document.body.classList.add('nav-locked');
+      closeButton.focus();
+    };
+    const closeLightbox = () => {
+      lightbox.classList.remove('is-open');
+      document.body.classList.remove('nav-locked');
+    };
+    const moveImage = (direction) => {
+      if (!items.length) return;
+      showImage((activeIndex + direction + items.length) % items.length);
+    };
+
+    $$('[data-lightbox] .ambiance__item').forEach((item) => {
+      item.addEventListener('click', (event) => {
+        event.preventDefault();
+        const group = item.closest('[data-lightbox]');
+        items = $$('.ambiance__item', group).filter((entry) => !entry.hidden);
+        showImage(items.indexOf(item));
+      });
+    });
+    closeButton.addEventListener('click', closeLightbox);
+    previousButton.addEventListener('click', () => moveImage(-1));
+    nextButton.addEventListener('click', () => moveImage(1));
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    window.addEventListener('keydown', (event) => {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (event.key === 'Escape') closeLightbox();
+      if (event.key === 'ArrowLeft') moveImage(-1);
+      if (event.key === 'ArrowRight') moveImage(1);
+    });
+  }
+
+  const setStatus = (status, kind, message) => {
+    status.className = `form__status form__status--${kind} is-visible`;
+    status.textContent = message;
+  };
+
+  const validEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const configureForm = (form, endpoint, validators) => {
+    if (!form) return;
+    const status = $('.form__status', form) || $('.form__status', form.parentElement);
+    const submit = $('[type="submit"]', form);
+    if (!status || !submit) return;
+
+    const validate = () => {
+      let valid = true;
+      Object.entries(validators).forEach(([name, test]) => {
+        const input = form.elements.namedItem(name);
+        if (!input) return;
+        const field = input.closest('.form__field');
+        const fieldIsValid = test(input.value.trim());
+        if (field) field.classList.toggle('is-invalid', !fieldIsValid);
+        valid = fieldIsValid && valid;
+      });
+      return valid;
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      status.classList.remove('is-visible');
+      if (!validate()) {
+        setStatus(status, 'error', 'Please review the highlighted fields.');
+        return;
+      }
+
+      const originalLabel = submit.textContent;
+      submit.disabled = true;
+      submit.classList.add('is-loading');
+      submit.textContent = 'Sending…';
+      try {
+        const payload = Object.fromEntries(new FormData(form).entries());
+        if (form.id === 'newsletter-form') {
+          payload.email = $('#newsletter-email', form).value.trim();
+          payload.subject = 'Newsletter subscription';
+          payload.message = 'Subscribed to the LUMINA newsletter.';
+        }
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+          throw new Error(result.error || 'We could not submit your request. Please try again.');
+        }
+
+        const ref = result.bookingId ? ` Reference: ${String(result.bookingId).slice(-6).toUpperCase()}.` : '';
+        const message = form.id === 'table-booking'
+          ? `Your table request has been received. Our team will contact you to confirm.${ref}`
+          : form.id === 'stay-booking'
+            ? `Your stay request has been received. We’ll contact you to confirm availability and rates.${ref}`
+            : result.message || 'Thank you. We have received your message.';
+        setStatus(status, 'ok', message);
+        form.reset();
+        updateDepartureMin();
+      } catch (error) {
+        console.error('Form submission error:', error);
+        setStatus(status, 'error', error.message || 'Network error. Please try again.');
+      } finally {
+        submit.disabled = false;
+        submit.classList.remove('is-loading');
+        submit.textContent = originalLabel;
+      }
+    });
+
+    form.addEventListener('input', (event) => {
+      const field = event.target.closest('.form__field');
+      if (field?.classList.contains('is-invalid')) validate();
+    });
+    form.addEventListener('change', (event) => {
+      const field = event.target.closest('.form__field');
+      if (field?.classList.contains('is-invalid')) validate();
+    });
+  };
+
+  const nameIsValid = (value) => value.length >= 2 && value.length <= 100;
+  const phoneIsValid = (value) => /^[+\d][\d\s().-]{6,24}$/.test(value);
+  const required = (value) => value.length > 0;
+  const isCurrentOrLaterDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && value >= todayString;
+  const guestCount = (minimum, maximum) => (value) => {
+    const count = Number(value);
+    return Number.isInteger(count) && count >= minimum && count <= maximum;
+  };
+
+  const tableDate = $('#table-date');
+  const tableTime = $('#table-time');
+  const tableDateValid = (value) => {
+    if (!isCurrentOrLaterDate(value)) return false;
+    if (value !== todayString) return true;
+    const [hours, minutes] = (tableTime?.value || '00:00').split(':').map(Number);
+    return hours * 60 + minutes > today.getHours() * 60 + today.getMinutes();
+  };
+
+  configureForm($('#table-booking'), '/api/reservations', {
+    name: nameIsValid,
+    email: validEmail,
+    phone: phoneIsValid,
+    guests: guestCount(1, 8),
+    date: tableDateValid,
+    time: required,
+    seatingPreference: required,
+  });
+  configureForm($('#stay-booking'), '/api/stays', {
+    name: nameIsValid,
+    email: validEmail,
+    phone: phoneIsValid,
+    roomType: required,
+    checkIn: isCurrentOrLaterDate,
+    checkOut: (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && !!arrival?.value && value > arrival.value,
+    guests: guestCount(1, 6),
+    rooms: guestCount(1, 5),
+  });
+  configureForm($('#contact-form'), '/api/contact', {
+    name: nameIsValid,
+    email: validEmail,
+    subject: (value) => value.trim().length >= 3,
+    message: (value) => value.trim().length >= 10,
+  });
+  configureForm($('#newsletter-form'), '/api/contact', {
+    email: validEmail,
+  });
+
   const toTop = $('.to-top');
   if (toTop) {
     window.addEventListener('scroll', () => {
       toTop.classList.toggle('is-visible', window.scrollY > 600);
     }, { passive: true });
-    toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    toTop.addEventListener('click', () => window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    }));
   }
 
-  /* ---------- Favourite toggles ---------- */
-  $$('.card-dish__fav').forEach((btn) => {
-    btn.addEventListener('click', () => btn.classList.toggle('is-fav'));
-  });
-
-  /* ---------- Lightbox ---------- */
-  const lightbox = $('#lightbox');
-  if (lightbox) {
-    const img = $('.lightbox__img', lightbox);
-    const caption = $('.lightbox__caption', lightbox);
-    const close = $('.lightbox__close', lightbox);
-    const prev = $('.lightbox__prev', lightbox);
-    const next = $('.lightbox__next', lightbox);
-    let items = [];
-    let index = 0;
-
-    const open = (i) => {
-      const item = items[i];
-      if (!item) return;
-      const source = item.querySelector('img');
-      img.src = source.src;
-      img.alt = source.alt || '';
-      caption.textContent = img.alt || '';
-      lightbox.classList.add('is-open');
-      document.body.classList.add('nav-locked');
-    };
-
-    const closeBox = () => {
-      lightbox.classList.remove('is-open');
-      document.body.classList.remove('nav-locked');
-    };
-
-    const step = (dir) => {
-      index = (index + dir + items.length) % items.length;
-      open(index);
-    };
-
-    // Collect the visible items in the clicked group each time, so filtered
-    // galleries and the homepage both navigate correctly.
-    $$('[data-lightbox] .ambiance__item').forEach((item) => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        const group = item.closest('[data-lightbox]');
-        items = $$('.ambiance__item', group).filter((it) => !it.hidden);
-        index = items.indexOf(item);
-        open(index);
-      });
-    });
-
-    close.addEventListener('click', closeBox);
-    prev.addEventListener('click', () => step(-1));
-    next.addEventListener('click', () => step(1));
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeBox();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (!lightbox.classList.contains('is-open')) return;
-      if (e.key === 'Escape') closeBox();
-      if (e.key === 'ArrowLeft') step(-1);
-      if (e.key === 'ArrowRight') step(1);
-    });
-  }
-
-  /* ---------- Image fallback ---------- */
-  const PLACEHOLDER =
-    "data:image/svg+xml;charset=utf-8," +
-    encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#121b28"/><stop offset="1" stop-color="#2c2c2c"/></linearGradient></defs><rect width="1200" height="800" fill="url(#g)"/><text x="600" y="420" font-family="sans-serif" font-size="44" font-weight="bold" letter-spacing="8" fill="#ff7b00" text-anchor="middle">LUMINA</text></svg>`
-    );
-
-  document.addEventListener('error', (e) => {
-    if (e.target.tagName === 'IMG' && !e.target.dataset.fallback) {
-      e.target.dataset.fallback = '1';
-      e.target.src = PLACEHOLDER;
-    }
+  const placeholder = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="1200" height="800" fill="#202d28"/><text x="600" y="420" font-family="sans-serif" font-size="44" letter-spacing="8" fill="#d0ad78" text-anchor="middle">LUMINA</text></svg>'
+  );
+  document.addEventListener('error', (event) => {
+    if (event.target.tagName !== 'IMG' || event.target.dataset.fallback) return;
+    event.target.dataset.fallback = '1';
+    event.target.src = placeholder;
   }, true);
 
-  /* ---------- Forms ---------- */
-  const handleForm = (form, fields) => {
-    if (!form) return;
-    // The status line lives inside the form, except the footer newsletter where
-    // it sits next to it in the same wrapper.
-    const status = $('.form__status', form) || $('.form__status', form.parentElement);
-    if (!status) return;
-    const submit = $('[type="submit"]', form);
-
-    const validate = () => {
-      let valid = true;
-      fields.forEach(([input, test]) => {
-        const ok = test(input.value.trim());
-        const field = input.closest('.form__field');
-        if (field) field.classList.toggle('is-invalid', !ok);
-        valid = valid && ok;
-      });
-      return valid;
-    };
-
-    const setStatus = (kind, msg) => {
-      status.className = `form__status form__status--${kind} is-visible`;
-      status.innerHTML = `<span class="spinner"></span>${msg}`;
-    };
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!validate()) {
-        setStatus('error', 'Please review the highlighted fields.');
-        setTimeout(() => status.classList.remove('is-visible'), 4000);
-        return;
-      }
-
-      const sending = submit.cloneNode(true);
-      sending.disabled = true;
-      sending.classList.add('is-loading');
-      sending.innerHTML = '<span class="spinner"></span>Sending…';
-      submit.replaceWith(sending);
-
-      let endpoint = '/api/contact';
-      let payload = {};
-
-      if (form.id === 'reserve-form') {
-        endpoint = '/api/reservations';
-        payload = {
-          name: $('#reserve-name', form)?.value || '',
-          email: $('#reserve-email', form)?.value || '',
-          phone: $('#reserve-phone', form)?.value || '',
-          guests: $('#reserve-guests', form)?.value || '',
-          date: $('#reserve-date', form)?.value || '',
-          time: $('#reserve-time', form)?.value || '',
-          requests: $('#reserve-requests', form)?.value || ''
-        };
-      } else if (form.id === 'contact-form') {
-        endpoint = '/api/contact';
-        payload = {
-          name: $('#contact-name', form)?.value || '',
-          email: $('#contact-email', form)?.value || '',
-          phone: $('#contact-phone', form)?.value || '',
-          subject: $('#contact-subject', form)?.value || '',
-          message: $('#contact-message', form)?.value || ''
-        };
-      } else {
-        endpoint = '/api/contact';
-        payload = {
-          email: $('#newsletter-email', form)?.value || '',
-          subject: 'Newsletter Subscription',
-          message: 'Subscribed to monthly Lumina newsletter'
-        };
-      }
-
-      fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          sending.replaceWith(submit);
-          if (res.success) {
-            const msg = form.id === 'reserve-form'
-              ? `🎉 Reservation Confirmed! Stored securely in MongoDB. Booking Ref: #${res.bookingId ? res.bookingId.slice(-6).toUpperCase() : 'LUMINA'}`
-              : (res.message || 'Thank you — we have received your request.');
-            setStatus('ok', msg);
-            form.reset();
-            setTimeout(() => status.classList.remove('is-visible'), 10000);
-          } else {
-            setStatus('error', res.error || 'Failed to submit. Please try again.');
-          }
-        })
-        .catch((err) => {
-          console.error('Form submission error:', err);
-          sending.replaceWith(submit);
-          setStatus('error', 'Network error. Unable to reach database server.');
-        });
-    });
-
-    form.addEventListener('input', (e) => {
-      const field = e.target.closest('.form__field');
-      if (field && field.classList.contains('is-invalid')) validate();
-    });
-  };
-
-  handleForm($('#reserve-form'), [
-    [$('#reserve-name'), (v) => v.length >= 2],
-    [$('#reserve-email'), (v) => /.+@.+\..+/.test(v)],
-    [$('#reserve-phone'), (v) => v.length >= 7],
-    [$('#reserve-date'), (v) => !!v],
-    [$('#reserve-time'), (v) => !!v],
-    [$('#reserve-guests'), (v) => parseInt(v, 10) > 0],
-  ]);
-
-  handleForm($('#contact-form'), [
-    [$('#contact-name'), (v) => v.length >= 2],
-    [$('#contact-email'), (v) => /.+@.+\..+/.test(v)],
-    [$('#contact-subject'), (v) => v.length >= 3],
-    [$('#contact-message'), (v) => v.length >= 10],
-  ]);
-
-  handleForm($('#newsletter-form'), [
-    [$('#newsletter-email'), (v) => /.+@.+\..+/.test(v)],
-  ]);
-
-  /* ---------- Global Image Error Fallback Handler ---------- */
-  const fallbackGourmetImage = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80';
-  document.addEventListener('error', (e) => {
-    if (e.target && e.target.tagName === 'IMG' && !e.target.dataset.fallbackApplied) {
-      e.target.dataset.fallbackApplied = 'true';
-      e.target.src = fallbackGourmetImage;
-    }
-  }, true);
-
-  /* ---------- Footer year ---------- */
-  $$('.js-year').forEach((el) => { el.textContent = new Date().getFullYear(); });
+  $$('.js-year').forEach((element) => { element.textContent = String(new Date().getFullYear()); });
 })();
-

@@ -1,11 +1,12 @@
 {
   "name": "ht",
   "version": "1.0.0",
-  "description": "LUMINA Fine Dining & Lounge Web Platform",
+  "description": "LUMINA hotel, dining, and booking website",
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
-    "build": "node -e \"const fs=require('fs'); ['public','dist'].forEach(dir => { if(!fs.existsSync(dir)) fs.mkdirSync(dir); ['index.html','menu.html','gallery.html','contact.html','favicon.svg','robots.txt','sitemap.xml'].forEach(f => fs.existsSync(f) && fs.copyFileSync(f, dir+'/'+f)); ['css','js'].forEach(d => { if(fs.existsSync(d)) { if(!fs.existsSync(dir+'/'+d)) fs.mkdirSync(dir+'/'+d); fs.readdirSync(d).forEach(f => fs.copyFileSync(d+'/'+f, dir+'/'+d+'/'+f)); } }); });\""
+    "build": "node -e \"const fs=require('fs'); const pages=['index.html','about.html','stay.html','reserve.html','menu.html','gallery.html','contact.html','favicon.svg','robots.txt','sitemap.xml']; for(const dir of ['public','dist']) { fs.mkdirSync(dir,{recursive:true}); for(const file of pages) fs.copyFileSync(file,dir+'/'+file); for(const assetDir of ['css','js']) { fs.mkdirSync(dir+'/'+assetDir,{recursive:true}); for(const file of fs.readdirSync(assetDir)) fs.copyFileSync(assetDir+'/'+file,dir+'/'+assetDir+'/'+file); } }\"",
+    "test": "node --test"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
