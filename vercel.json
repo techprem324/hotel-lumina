@@ -11,6 +11,8 @@
     { "source": "/book", "destination": "/reserve.html" },
     { "source": "/menu", "destination": "/menu.html" },
     { "source": "/gallery", "destination": "/gallery.html" },
-    { "source": "/contact", "destination": "/contact.html" }
+    { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/admin", "destination": "/admin-inbox.html" },
+    { "source": "/inbox", "destination": "/admin-inbox.html" }
   ]
 }

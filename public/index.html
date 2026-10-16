@@ -20,7 +20,7 @@
     "@type": "Hotel",
     "name": "LUMINA",
     "url": "https://hotel-lumina-m.vercel.app/",
-    "telephone": "+91-11-4567-8900",
+    "telephone": "+91-93395-20358",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "14 Rajpath Marg, Connaught Place",
@@ -63,6 +63,96 @@
         </div>
       </div>
       <a class="home-hero__scroll" href="#welcome" aria-label="Scroll to discover">↓</a>
+    </section>
+
+    <!-- Quick Touch Booking & Availability Card -->
+    <section class="home-quick-booking container">
+      <div class="quick-booking-card reveal">
+        <div class="quick-booking-tabs" role="tablist">
+          <button class="quick-booking-tab is-active" id="tab-quick-stay" type="button" data-quick-tab="stay">🛏 Check Room Availability</button>
+          <button class="quick-booking-tab" id="tab-quick-table" type="button" data-quick-tab="table">🍽 Book a Dining Table</button>
+        </div>
+        
+        <!-- Quick Stay Form -->
+        <form id="quick-stay-form" class="quick-booking-form" novalidate>
+          <div class="quick-booking-grid">
+            <div class="quick-field">
+              <label for="qs-checkin">Check-in Date</label>
+              <input type="date" id="qs-checkin" name="checkIn" data-min-today required>
+            </div>
+            <div class="quick-field">
+              <label for="qs-checkout">Check-out Date</label>
+              <input type="date" id="qs-checkout" name="checkOut" required>
+            </div>
+            <div class="quick-field">
+              <label for="qs-room">Preferred Room</label>
+              <select id="qs-room" name="roomType" required>
+                <option value="Classic Room">Classic Room</option>
+                <option value="Deluxe Room">Deluxe Room</option>
+                <option value="LUMINA Suite">LUMINA Suite</option>
+              </select>
+            </div>
+            <div class="quick-field">
+              <label for="qs-guests">Guests</label>
+              <select id="qs-guests" name="guests">
+                <option value="1">1 Guest</option>
+                <option value="2" selected>2 Guests</option>
+                <option value="3">3 Guests</option>
+                <option value="4">4 Guests</option>
+              </select>
+            </div>
+            <div class="quick-field">
+              <label for="qs-email">Your Email</label>
+              <input type="email" id="qs-email" name="email" placeholder="name@domain.com" required>
+            </div>
+            <button type="submit" class="btn btn--gold quick-submit-btn">Check &amp; Book ↗</button>
+          </div>
+          <p class="form__status" role="status" aria-live="polite" style="margin-top:14px"></p>
+        </form>
+
+        <!-- Quick Table Form -->
+        <form id="quick-table-form" class="quick-booking-form" hidden novalidate>
+          <div class="quick-booking-grid">
+            <div class="quick-field">
+              <label for="qt-date">Dining Date</label>
+              <input type="date" id="qt-date" name="date" data-min-today required>
+            </div>
+            <div class="quick-field">
+              <label for="qt-time">Preferred Time</label>
+              <select id="qt-time" name="time" required>
+                <option value="12:00">12:00 Lunch</option>
+                <option value="13:00">13:00 Lunch</option>
+                <option value="19:00" selected>19:00 Dinner</option>
+                <option value="20:00">20:00 Dinner</option>
+                <option value="21:00">21:00 Dinner</option>
+              </select>
+            </div>
+            <div class="quick-field">
+              <label for="qt-guests">Party Size</label>
+              <select id="qt-guests" name="guests">
+                <option value="1">1 Person</option>
+                <option value="2" selected>2 People</option>
+                <option value="4">4 People</option>
+                <option value="6">6 People</option>
+              </select>
+            </div>
+            <div class="quick-field">
+              <label for="qt-seating">Seating</label>
+              <select id="qt-seating" name="seatingPreference">
+                <option value="Main dining room">Main Dining Room</option>
+                <option value="Window table">Window Table</option>
+                <option value="Garden terrace">Garden Terrace</option>
+              </select>
+            </div>
+            <div class="quick-field">
+              <label for="qt-email">Your Email</label>
+              <input type="email" id="qt-email" name="email" placeholder="name@domain.com" required>
+            </div>
+            <button type="submit" class="btn btn--gold quick-submit-btn">Reserve Table ↗</button>
+          </div>
+          <p class="form__status" role="status" aria-live="polite" style="margin-top:14px"></p>
+        </form>
+      </div>
     </section>
 
     <section class="home-welcome section section--cream" id="welcome">
@@ -162,9 +252,9 @@
       <a class="logo" href="index.html"><span class="logo__mark">L</span><span>LUMINA<small>NEW DELHI</small></span></a>
       <p>Thoughtful stays and good things around the table.</p>
       <nav aria-label="Footer navigation">
-        <a href="stay.html">Stay</a><a href="about.html">About</a><a href="menu.html">Dining</a><a href="gallery.html">Spaces</a><a href="contact.html">Contact</a><a href="reserve.html">Book now</a>
+        <a href="stay.html">Stay</a><a href="about.html">About</a><a href="menu.html">Dining</a><a href="gallery.html">Spaces</a><a href="contact.html">Contact</a><a href="reserve.html">Book now</a><a href="admin-inbox.html">Concierge Inbox</a>
       </nav>
-      <small>© <span class="js-year"></span> LUMINA. All rights reserved.</small>
+      <small>© <span class="js-year">2026</span> LUMINA. All rights reserved. &middot; Concierge: +91 93395 20358 &middot; kumar02premsri@gmail.com</small>
     </div>
   </footer>
   <button class="to-top" type="button" aria-label="Back to top">↑</button>

@@ -3317,3 +3317,188 @@ body {
     animation: none;
   }
 }
+
+/* ---------- Touch-friendly Quick Booking Bar ---------- */
+.home-quick-booking {
+  position: relative;
+  z-index: 10;
+  margin-top: -60px;
+  margin-bottom: 40px;
+}
+
+.quick-booking-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px 30px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(208, 173, 120, 0.35);
+}
+
+.quick-booking-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f0ece4;
+  padding-bottom: 12px;
+}
+
+.quick-booking-tab {
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #7a7366;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.quick-booking-tab:hover {
+  color: var(--ink);
+  background: #f8f6f0;
+}
+
+.quick-booking-tab.is-active {
+  background: var(--ink);
+  color: #fff;
+}
+
+.quick-booking-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (max-width: 900px) {
+  .home-quick-booking {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .quick-booking-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.quick-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quick-field label {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c7467;
+  font-weight: 600;
+}
+
+.quick-field input,
+.quick-field select {
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1px solid #d9d2c5;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  background: #faf8f5;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+  touch-action: manipulation;
+}
+
+.quick-field input:focus,
+.quick-field select:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(208, 173, 120, 0.2);
+}
+
+.quick-submit-btn {
+  min-height: 52px;
+  padding: 0 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.quick-submit-btn:active,
+.btn:active,
+.booking-tab:active {
+  transform: scale(0.98);
+}
+
+/* ---------- Notification Toast Alert ---------- */
+.lumina-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  max-width: 440px;
+  width: calc(100% - 40px);
+  background: #18221e;
+  color: #ffffff;
+  padding: 18px 22px;
+  border-radius: 8px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25);
+  border-left: 4px solid var(--gold);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transform: translateY(120%);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.lumina-toast.is-shown {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.lumina-toast__icon {
+  font-size: 1.4rem;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.lumina-toast__content h4 {
+  font-size: 0.95rem;
+  margin: 0 0 4px;
+  color: #fff;
+}
+
+.lumina-toast__content p {
+  font-size: 0.85rem;
+  color: #cdd9d1;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.lumina-toast__close {
+  background: transparent;
+  border: none;
+  color: #99a89f;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  margin-left: auto;
+}
+
+.lumina-toast__close:hover {
+  color: #fff;
+}
+

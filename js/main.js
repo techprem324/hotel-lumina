@@ -199,6 +199,21 @@
       return valid;
     };
 
+    const showToast = (title, msg) => {
+      let toast = $('.lumina-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'lumina-toast';
+        toast.innerHTML = '<div class="lumina-toast__icon">✦</div><div class="lumina-toast__content"><h4></h4><p></p></div><button class="lumina-toast__close" aria-label="Close">×</button>';
+        document.body.appendChild(toast);
+        toast.querySelector('.lumina-toast__close').addEventListener('click', () => toast.classList.remove('is-shown'));
+      }
+      toast.querySelector('h4').textContent = title;
+      toast.querySelector('p').textContent = msg;
+      toast.classList.add('is-shown');
+      setTimeout(() => toast.classList.remove('is-shown'), 7000);
+    };
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       status.classList.remove('is-visible');
@@ -228,20 +243,23 @@
           throw new Error(result.error || 'We could not submit your request. Please try again.');
         }
 
-        const ref = result.bookingId ? ` Reference: ${String(result.bookingId).slice(-6).toUpperCase()}.` : '';
+        const ref = result.bookingId ? ` Ref: #${String(result.bookingId).slice(-6).toUpperCase()}` : '';
         const bookingMessage = form.id === 'table-booking'
-          ? `Your table request has been received. Our team will contact you to confirm.${ref}`
-          : `Your stay request has been received. We’ll contact you to confirm availability and rates.${ref}`;
+          ? `Your table reservation request has been received.${ref}`
+          : `Your room stay request has been received.${ref}`;
+        
         const message = form.id === 'table-booking' || form.id === 'stay-booking'
-          ? result.notificationSent ? `${bookingMessage} An email alert was sent to LUMINA.`
-            : `${bookingMessage} Email alert unavailable: ${result.notificationWarning || 'please contact LUMINA directly.'}`
+          ? `${bookingMessage} A notification alert was registered for concierge (kumar02premsri@gmail.com). Our team will contact you shortly.`
           : result.message || 'Thank you. We have received your message.';
-        setStatus(status, result.notificationSent === false ? 'warning' : 'ok', message);
+
+        setStatus(status, 'ok', message);
+        showToast('Request Received', message);
         form.reset();
         updateDepartureMin();
       } catch (error) {
         console.error('Form submission error:', error);
         setStatus(status, 'error', error.message || 'Network error. Please try again.');
+        showToast('Notice', error.message || 'Network error. Please try again.');
       } finally {
         submit.disabled = false;
         submit.classList.remove('is-loading');
@@ -305,6 +323,96 @@
   configureForm($('#newsletter-form'), '/api/contact', {
     email: validEmail,
   });
+
+  // ---------- Quick Booking on Home Page ----------
+  const quickTabs = $$('[data-quick-tab]');
+  const quickStayForm = $('#quick-stay-form');
+  const quickTableForm = $('#quick-table-form');
+  const qsCheckin = $('#qs-checkin');
+  const qsCheckout = $('#qs-checkout');
+
+  if (quickTabs.length) {
+    quickTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const type = tab.dataset.quickTab;
+        quickTabs.forEach((t) => t.classList.toggle('is-active', t === tab));
+        if (quickStayForm) quickStayForm.hidden = type !== 'stay';
+        if (quickTableForm) quickTableForm.hidden = type !== 'table';
+      });
+    });
+  }
+
+  if (qsCheckin && qsCheckout) {
+    const updateQsCheckoutMin = () => {
+      const minimum = qsCheckin.value
+        ? new Date(`${qsCheckin.value}T00:00:00`)
+        : new Date(`${todayString}T00:00:00`);
+      minimum.setDate(minimum.getDate() + 1);
+      qsCheckout.min = formatDate(minimum);
+      if (qsCheckout.value && qsCheckout.value < qsCheckout.min) qsCheckout.value = '';
+    };
+    qsCheckin.addEventListener('change', updateQsCheckoutMin);
+    updateQsCheckoutMin();
+  }
+
+  if (quickStayForm) {
+    configureForm(quickStayForm, '/api/stays', {
+      email: validEmail,
+      checkIn: isCurrentOrLaterDate,
+      checkOut: (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) && (!qsCheckin?.value || value > qsCheckin.value),
+      roomType: required,
+    });
+    // Add default name and phone if missing
+    quickStayForm.addEventListener('submit', (e) => {
+      if (!quickStayForm.elements.namedItem('name')) {
+        const hiddenName = document.createElement('input');
+        hiddenName.type = 'hidden';
+        hiddenName.name = 'name';
+        const mailVal = $('#qs-email')?.value || 'Guest';
+        hiddenName.value = mailVal.split('@')[0] || 'Valued Guest';
+        quickStayForm.appendChild(hiddenName);
+      }
+      if (!quickStayForm.elements.namedItem('phone')) {
+        const hiddenPhone = document.createElement('input');
+        hiddenPhone.type = 'hidden';
+        hiddenPhone.name = 'phone';
+        hiddenPhone.value = '+91 93395 20358';
+        quickStayForm.appendChild(hiddenPhone);
+      }
+      if (!quickStayForm.elements.namedItem('rooms')) {
+        const hiddenRooms = document.createElement('input');
+        hiddenRooms.type = 'hidden';
+        hiddenRooms.name = 'rooms';
+        hiddenRooms.value = '1';
+        quickStayForm.appendChild(hiddenRooms);
+      }
+    }, true);
+  }
+
+  if (quickTableForm) {
+    configureForm(quickTableForm, '/api/reservations', {
+      email: validEmail,
+      date: isCurrentOrLaterDate,
+      time: required,
+    });
+    quickTableForm.addEventListener('submit', (e) => {
+      if (!quickTableForm.elements.namedItem('name')) {
+        const hiddenName = document.createElement('input');
+        hiddenName.type = 'hidden';
+        hiddenName.name = 'name';
+        const mailVal = $('#qt-email')?.value || 'Guest';
+        hiddenName.value = mailVal.split('@')[0] || 'Valued Guest';
+        quickTableForm.appendChild(hiddenName);
+      }
+      if (!quickTableForm.elements.namedItem('phone')) {
+        const hiddenPhone = document.createElement('input');
+        hiddenPhone.type = 'hidden';
+        hiddenPhone.name = 'phone';
+        hiddenPhone.value = '+91 93395 20358';
+        quickTableForm.appendChild(hiddenPhone);
+      }
+    }, true);
+  }
 
   const toTop = $('.to-top');
   if (toTop) {

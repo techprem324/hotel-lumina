@@ -3,23 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery — LUMINA | Fine Dining &amp; Lounge</title>
-  <meta name="description" content="Step inside LUMINA — interiors, food, events, exterior and our chefs. Browse the gallery by category.">
+  <title>Spaces &amp; Architecture — LUMINA</title>
+  <meta name="description" content="Explore the curated spaces of LUMINA — tranquil courtyards, intimate dining pavilions, and calm suites designed for stillness.">
+  <meta name="theme-color" content="#18221e">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .spaces-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin-top: 10px;
+    }
+    .space-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(24, 34, 30, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .space-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+    .space-card__img-wrap {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: #18221e;
+      cursor: pointer;
+    }
+    .space-card__img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .space-card:hover .space-card__img-wrap img {
+      transform: scale(1.04);
+    }
+    .space-card__badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(24, 34, 30, 0.85);
+      backdrop-filter: blur(8px);
+      color: #d0ad78;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(208, 173, 120, 0.3);
+    }
+    .space-card__body {
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .space-card__body h3 {
+      font-size: 1.4rem;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .space-card__body p {
+      font-size: 0.95rem;
+      color: #5c5850;
+      line-height: 1.6;
+      margin: 0 0 20px;
+      flex: 1;
+    }
+    .space-card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #f0ece3;
+      padding-top: 16px;
+    }
+  </style>
 </head>
 <body>
 
   <header class="header">
     <div class="container header__inner">
-      <a class="logo" href="index.html" aria-label="LUMINA home">
-        <svg class="logo__emblem" viewBox="0 0 100 68" aria-hidden="true"><defs><linearGradient id="galHdrGlow" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ff7b00"/><stop offset="100%" stop-color="#ffc800"/></linearGradient></defs><g fill="none" stroke="url(#galHdrGlow)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M 50 64 L 46 25 L 50 14 L 54 25 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 36 29 L 38 18 L 44 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 64 29 L 62 18 L 56 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 26 38 L 26 27 L 35 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 74 38 L 74 27 L 65 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 18 50 L 16 40 L 28 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 82 50 L 84 40 L 72 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 12 62 L 9 52 L 22 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 88 62 L 91 52 L 78 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 38 64 A 12 12 0 0 1 62 64" fill="url(#galHdrGlow)"/></g></svg>
-        <span>LUMINA</span>
-      </a>
-
+      <a class="logo" href="index.html" aria-label="LUMINA home"><span class="logo__mark">L</span><span>LUMINA<small>NEW DELHI</small></span></a>
       <nav class="nav" aria-label="Main navigation">
         <a class="nav__link" href="index.html">Home</a>
         <a class="nav__link" href="stay.html">Stay</a>
@@ -29,108 +104,106 @@
         <a class="nav__link" href="contact.html">Contact</a>
         <a class="btn btn--gold nav__cta" href="reserve.html">Book now</a>
       </nav>
-
-      <button class="header__burger" aria-label="Toggle menu" aria-expanded="false">
+      <button class="header__burger" type="button" aria-label="Open navigation" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
   <main>
-    <section class="page-hero page-hero--gallery">
+    <section class="simple-hero">
       <div class="container">
-        <p class="breadcrumb"><a href="index.html">Home</a> / Gallery</p>
-        <h1>Inside LUMINA</h1>
-        <p class="eyebrow">A few favourite corners</p>
+        <p class="eyebrow">Architecture &amp; Atmosphere</p>
+        <h1>Considered spaces,<br><em>made for stillness.</em></h1>
+        <p>A minimal, tactile collection of our favourite corners in New Delhi.</p>
       </div>
     </section>
 
     <section class="section section--cream">
       <div class="container">
-        <div class="gallery-grid" data-lightbox>
-          <a class="ambiance__item reveal" href="#" aria-label="View main dining room photo">
-            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80" alt="The candlelit main dining room" loading="lazy">
-          </a>
-          <a class="ambiance__item reveal" href="#" aria-label="View chef portrait photo">
-            <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=900&q=80" alt="Head chef in the LUMINA kitchen" loading="lazy">
-          </a>
-          <a class="ambiance__item reveal" href="#" aria-label="View private dining room photo">
-            <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=900&q=80" alt="Private dining room with a long table" loading="lazy">
-          </a>
-          <a class="ambiance__item reveal" href="#" aria-label="View terrace photo">
-            <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=900&q=80" alt="Garden terrace set for an evening dinner" loading="lazy">
-          </a>
-          <a class="ambiance__item reveal" href="#" aria-label="View bar area photo">
-            <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=900&q=80" alt="The bar and lounge at dusk" loading="lazy">
-          </a>
-          <a class="ambiance__item reveal" href="#" aria-label="View dining hall photo">
-            <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=80" alt="The main dining hall with warm lighting" loading="lazy">
-          </a>
+        <div class="section-head center reveal" style="margin-bottom:36px">
+          <p class="eyebrow">Curated Environments</p>
+          <h2>Three corners of quiet luxury.</h2>
+          <p>Every corner is designed with natural light, warm timber, and thoughtful privacy.</p>
+        </div>
+
+        <div class="spaces-grid" data-lightbox>
+          <!-- Space 1 -->
+          <article class="space-card reveal">
+            <div class="space-card__img-wrap ambiance__item" aria-label="View Main Dining Pavilion">
+              <span class="space-card__badge">Dining &amp; Evenings</span>
+              <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=85" alt="The candlelit main dining room with warm ambient lighting" loading="lazy">
+            </div>
+            <div class="space-card__body">
+              <h3>The Dining Pavilion</h3>
+              <p>Understated elegance with soft candlelight, bespoke linen, and an unhurried rhythm for long evenings.</p>
+              <div class="space-card__footer">
+                <a class="text-link" href="reserve.html">Reserve a table <span aria-hidden="true">↗</span></a>
+                <span style="font-size:0.8rem;color:#8a8377">Seats up to 40</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Space 2 -->
+          <article class="space-card reveal" style="--d:0.1s">
+            <div class="space-card__img-wrap ambiance__item" aria-label="View Resident Suite Lounge">
+              <span class="space-card__badge">Stay &amp; Rest</span>
+              <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=85" alt="Tranquil guest room with thoughtful timber details and natural daylight" loading="lazy">
+            </div>
+            <div class="space-card__body">
+              <h3>The Resident Lounge</h3>
+              <p>A private sanctuary for house guests. Crafted teak furnishings, gentle morning light, and acoustic calm.</p>
+              <div class="space-card__footer">
+                <a class="text-link" href="stay.html">Explore suites <span aria-hidden="true">↗</span></a>
+                <span style="font-size:0.8rem;color:#8a8377">Exclusive to guests</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Space 3 -->
+          <article class="space-card reveal" style="--d:0.2s">
+            <div class="space-card__img-wrap ambiance__item" aria-label="View Garden Terrace">
+              <span class="space-card__badge">Alfresco &amp; Flora</span>
+              <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=85" alt="Garden terrace set for evening dinner under outdoor string lights" loading="lazy">
+            </div>
+            <div class="space-card__body">
+              <h3>The Garden Verandah</h3>
+              <p>Open-air breezes shaded by seasonal greenery and night-blooming jasmine, ideal for intimate gatherings.</p>
+              <div class="space-card__footer">
+                <a class="text-link" href="reserve.html">Request terrace table <span aria-hidden="true">↗</span></a>
+                <span style="font-size:0.8rem;color:#8a8377">Weather permitting</span>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Callout box -->
+        <div style="margin-top:48px;padding:36px;background:#fff;border-radius:8px;border:1px solid #ebd9c0;text-align:center" class="reveal">
+          <p class="eyebrow" style="margin-bottom:6px">Private Occasions &amp; Gatherings</p>
+          <h3 style="font-size:1.6rem;margin:0 0 10px;color:var(--ink)">Host an Intimate Event at LUMINA</h3>
+          <p style="max-width:560px;margin:0 auto 20px;color:#5a554d;font-size:0.95rem">
+            From anniversary dinners to private corporate retreats, our concierge team tailors every detail with discretion and grace.
+          </p>
+          <a class="btn btn--gold" href="contact.html">Speak with Concierge (+91 93395 20358)</a>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="container">
-      <div class="footer__grid">
-        <div class="footer__about">
-          <a class="logo" href="index.html">
-            <svg class="logo__emblem" viewBox="0 0 100 68" aria-hidden="true"><defs><linearGradient id="galFtrGlow" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ff7b00"/><stop offset="100%" stop-color="#ffc800"/></linearGradient></defs><g fill="none" stroke="url(#galFtrGlow)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M 50 64 L 46 25 L 50 14 L 54 25 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 36 29 L 38 18 L 44 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 64 29 L 62 18 L 56 28 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 26 38 L 26 27 L 35 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 74 38 L 74 27 L 65 36 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 18 50 L 16 40 L 28 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 82 50 L 84 40 L 72 46 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 12 62 L 9 52 L 22 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 50 64 L 88 62 L 91 52 L 78 57 Z" fill="#ff7b00" fill-opacity="0.25"/><path d="M 38 64 A 12 12 0 0 1 62 64" fill="url(#galFtrGlow)"/></g></svg>
-            <span>LUMINA</span>
-          </a>
-          <p>A fine-dining destination where royal Mughlai tradition meets modern European craft — in the heart of the city since 1998.</p>
-          <div class="footer__social">
-            <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
-            <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8h3V5h-3a4 4 0 0 0-4 4v2H7v3h3v7h3v-7h3l1-3h-4V9a1 1 0 0 1 1-1z"/></svg></a>
-            <a href="#" aria-label="X (Twitter)"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.3l-4.9-6.4L5 21H1.9l7.3-8.3L2.2 3h6.4l4.4 5.9L17.5 3zm-1.1 16.1h1.7L7.7 4.8H5.9l10.5 14.3z"/></svg></a>
-            <a href="#" aria-label="LinkedIn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.5c0-1.3 0-3-1.9-3s-2.2 1.4-2.2 2.9V21H9z"/></svg></a>
-          </div>
-        </div>
-
-        <nav class="footer__links" aria-label="Footer navigation">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="stay.html">Stay</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="menu.html">Dining</a></li>
-            <li><a href="gallery.html">Spaces</a></li>
-            <li><a href="reserve.html">Reservations</a></li>
-            <li><a href="contact.html">Private Events</a></li>
-          </ul>
-        </nav>
-
-        <div class="footer__hours">
-          <h4>Opening Hours</h4>
-          <ul>
-            <li><span>Monday — Friday</span><time>12:00 – 23:30</time></li>
-            <li><span>Saturday</span><time>12:00 – 00:30</time></li>
-            <li><span>Sunday</span><time>11:30 – 23:30</time></li>
-            <li><span>Bar &amp; Lounge</span><time>Until 01:00</time></li>
-          </ul>
-        </div>
-
-        <div class="newsletter">
-          <h4>Stay in the Loop</h4>
-          <p>Seasonal menus, chef's table evenings and member-only tastings — once a month, no noise.</p>
-          <form class="newsletter__form" id="newsletter-form" novalidate>
-            <label for="newsletter-email" class="sr-only">Email address</label>
-            <input id="newsletter-email" type="email" placeholder="Your email address" autocomplete="email">
-            <button type="submit" aria-label="Subscribe">→</button>
-          </form>
-          <p class="form__status" role="status" aria-live="polite"></p>
-          <p class="newsletter__note">We respect your inbox. Unsubscribe anytime.</p>
-        </div>
-      </div>
-
-      <div class="footer__bottom">
-        <p>© <span class="js-year">2026</span> LUMINA. All rights reserved.</p>
-        <div class="footer__partners">
-          <span>Order via</span>
-          <strong>Zomato</strong><strong>Swiggy</strong><strong>Dineout</strong>
-        </div>
-      </div>
+    <div class="container footer__modern">
+      <a class="logo" href="index.html"><span class="logo__mark">L</span><span>LUMINA<small>NEW DELHI</small></span></a>
+      <p>Thoughtful stays and good things around the table.</p>
+      <nav aria-label="Footer navigation">
+        <a href="stay.html">Stay</a>
+        <a href="about.html">About</a>
+        <a href="menu.html">Dining</a>
+        <a href="gallery.html">Spaces</a>
+        <a href="contact.html">Contact</a>
+        <a href="reserve.html">Book now</a>
+        <a href="admin-inbox.html">Concierge Inbox</a>
+      </nav>
+      <small>© <span class="js-year">2026</span> LUMINA. All rights reserved. &middot; Concierge: +91 93395 20358 &middot; kumar02premsri@gmail.com</small>
     </div>
   </footer>
 
@@ -144,7 +217,6 @@
   </div>
 
   <button class="to-top" aria-label="Back to top">↑</button>
-
-  <script src="js/main.js"></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

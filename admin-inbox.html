@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concierge Mail Inbox &amp; Notifications — LUMINA</title>
+  <meta name="description" content="LUMINA Reservations Inbox: manage room stay requests, dining table reservations, and availability searches.">
+  <meta name="theme-color" content="#18221e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    :root {
+      --inbox-bg: #f5f2ec;
+      --inbox-card: #ffffff;
+      --inbox-border: #e6dfd5;
+      --inbox-gold: #c89d5c;
+      --inbox-dark: #18221e;
+      --inbox-green: #2a6a4e;
+      --inbox-blue: #1c5275;
+      --inbox-amber: #b25e1a;
+    }
+    body {
+      background-color: var(--inbox-bg);
+      color: #2b2b2b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .inbox-hero {
+      background: linear-gradient(135deg, #18221e 0%, #25332c 100%);
+      color: #fff;
+      padding: 36px 0 28px;
+      border-bottom: 1px solid rgba(200, 157, 92, 0.3);
+    }
+    .inbox-hero__inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .inbox-hero__title h1 {
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      margin: 4px 0 0;
+      color: #fff;
+    }
+    .inbox-hero__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: #c5d6cc;
+    }
+    .inbox-hero__email-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(200, 157, 92, 0.18);
+      border: 1px solid rgba(200, 157, 92, 0.4);
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: #e5c99e;
+      font-weight: 500;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #4ade80;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+    .inbox-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin: -20px 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+    .stat-card {
+      background: var(--inbox-card);
+      border-radius: 8px;
+      padding: 18px 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+      border: 1px solid var(--inbox-border);
+      border-top: 3px solid var(--inbox-gold);
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-card.stat-stay { border-top-color: var(--inbox-green); }
+    .stat-card.stat-table { border-top-color: var(--inbox-amber); }
+    .stat-card.stat-avail { border-top-color: var(--inbox-blue); }
+    .stat-card__number {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--inbox-dark);
+      line-height: 1;
+      margin: 6px 0 2px;
+    }
+    .stat-card__label {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7b756c;
+      font-weight: 600;
+    }
+    .inbox-toolbar {
+      background: var(--inbox-card);
+      border-radius: 8px;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      border: 1px solid var(--inbox-border);
+      margin-bottom: 20px;
+    }
+    .inbox-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .inbox-tab-btn {
+      background: transparent;
+      border: 1px solid var(--inbox-border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #635f58;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .inbox-tab-btn:hover {
+      border-color: var(--inbox-gold);
+      color: var(--inbox-dark);
+    }
+    .inbox-tab-btn.is-active {
+      background: var(--inbox-dark);
+      border-color: var(--inbox-dark);
+      color: #fff;
+    }
+    .inbox-search-box {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .inbox-search-input {
+      padding: 9px 14px;
+      border: 1px solid var(--inbox-border);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      min-width: 220px;
+      background: #faf8f5;
+    }
+    .inbox-search-input:focus {
+      outline: none;
+      border-color: var(--inbox-gold);
+      background: #fff;
+    }
+    .btn-refresh {
+      background: #eef3f0;
+      color: var(--inbox-dark);
+      border: 1px solid #c9d8d0;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-refresh:hover {
+      background: #dce7e1;
+    }
+    .inbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .inbox-card {
+      background: var(--inbox-card);
+      border: 1px solid var(--inbox-border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: start;
+    }
+    .inbox-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      border-color: #d8cebf;
+    }
+    @media (max-width: 768px) {
+      .inbox-card {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
+    .inbox-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 4px;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .badge-stay { background: var(--inbox-green); }
+    .badge-table { background: var(--inbox-amber); }
+    .badge-avail { background: var(--inbox-blue); }
+    .badge-contact { background: #555; }
+    .inbox-details h3 {
+      font-size: 1.15rem;
+      margin: 0 0 6px;
+      color: var(--inbox-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .inbox-guest-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .inbox-guest-contact a {
+      color: #896025;
+      text-decoration: underline;
+    }
+    .inbox-params {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .inbox-param-tag {
+      background: #f7f4ee;
+      border: 1px solid #ede7db;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      color: #4b463e;
+    }
+    .inbox-note {
+      font-size: 0.86rem;
+      color: #4a4a4a;
+      background: #faf8f5;
+      padding: 8px 12px;
+      border-left: 3px solid var(--inbox-gold);
+      border-radius: 0 4px 4px 0;
+      margin-top: 8px;
+    }
+    .inbox-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 140px;
+    }
+    .btn-action {
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-action-primary {
+      background: var(--inbox-dark);
+      color: #fff;
+    }
+    .btn-action-primary:hover {
+      background: #2b3b33;
+    }
+    .btn-action-secondary {
+      background: #fff;
+      border-color: #d1c8bb;
+      color: #444;
+    }
+    .btn-action-secondary:hover {
+      background: #f4ede2;
+      color: var(--inbox-dark);
+    }
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--inbox-card);
+      border-radius: 8px;
+      border: 1px dashed var(--inbox-border);
+      color: #888;
+    }
+    .empty-state h3 {
+      font-family: var(--serif);
+      color: var(--inbox-dark);
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="logo" href="index.html" aria-label="LUMINA home"><span class="logo__mark">L</span><span>LUMINA<small>NEW DELHI</small></span></a>
+      <nav class="nav" aria-label="Main navigation">
+        <a class="nav__link" href="index.html">Home</a>
+        <a class="nav__link" href="stay.html">Stay</a>
+        <a class="nav__link" href="menu.html">Dining</a>
+        <a class="nav__link" href="gallery.html">Spaces</a>
+        <a class="nav__link" href="contact.html">Contact</a>
+        <a class="btn btn--gold nav__cta" href="reserve.html">Book now</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="flex:1">
+    <section class="inbox-hero">
+      <div class="container inbox-hero__inner">
+        <div class="inbox-hero__title">
+          <p class="eyebrow" style="color:var(--gold);margin-bottom:4px"><span class="live-dot"></span> Concierge Live Inbox</p>
+          <h1>Booking Requests &amp; Notification Alerts</h1>
+        </div>
+        <div class="inbox-hero__meta">
+          <div class="inbox-hero__email-badge">
+            <span aria-hidden="true">✉</span> Notifications forwarded to: <strong>kumar02premsri@gmail.com</strong>
+          </div>
+          <a href="tel:+919339520358" class="inbox-hero__email-badge" style="text-decoration:none;color:#fff;background:rgba(255,255,255,0.1)">
+            <span aria-hidden="true">☎</span> Concierge Line: <strong>+91 93395 20358</strong>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container" style="padding-top:20px">
+      <!-- KPI Stats -->
+      <div class="inbox-stats" id="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card__label">Total Inquiries</span>
+          <span class="stat-card__number" id="stat-total">0</span>
+        </div>
+        <div class="stat-card stat-stay">
+          <span class="stat-card__label">Room Stay Requests</span>
+          <span class="stat-card__number" id="stat-stay">0</span>
+        </div>
+        <div class="stat-card stat-table">
+          <span class="stat-card__label">Table Reservations</span>
+          <span class="stat-card__number" id="stat-table">0</span>
+        </div>
+        <div class="stat-card stat-avail">
+          <span class="stat-card__label">Availability Searches</span>
+          <span class="stat-card__number" id="stat-avail">0</span>
+        </div>
+      </div>
+
+      <!-- Controls & Filters -->
+      <div class="inbox-toolbar">
+        <div class="inbox-tabs">
+          <button class="inbox-tab-btn is-active" data-filter="all">All Alerts</button>
+          <button class="inbox-tab-btn" data-filter="stay">Rooms</button>
+          <button class="inbox-tab-btn" data-filter="table">Dining Tables</button>
+          <button class="inbox-tab-btn" data-filter="availability">Availability Searches</button>
+          <button class="inbox-tab-btn" data-filter="inquiry">Messages</button>
+        </div>
+        <div class="inbox-search-box">
+          <input type="text" id="search-input" class="inbox-search-input" placeholder="Search by name, email, ref…">
+          <button class="btn-refresh" id="refresh-btn">
+            <span aria-hidden="true">↻</span> Refresh
+          </button>
+          <button class="btn-refresh" id="test-alert-btn" style="background:#f6eedf;border-color:#e4cfae;color:#8d6428">
+            <span aria-hidden="true">⚡</span> Send Test Alert
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Feed -->
+      <div class="inbox-list" id="inbox-feed">
+        <div class="empty-state">
+          <h3>Loading Booking Inquiries…</h3>
+          <p>Connecting to LUMINA reservation database.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__modern">
+      <a class="logo" href="index.html"><span class="logo__mark">L</span><span>LUMINA<small>NEW DELHI</small></span></a>
+      <p>Thoughtful stays and good things around the table.</p>
+      <nav aria-label="Footer navigation">
+        <a href="index.html">Home</a>
+        <a href="stay.html">Stay</a>
+        <a href="reserve.html">Reservations</a>
+        <a href="admin-inbox.html" class="is-current">Concierge Inbox</a>
+      </nav>
+      <small>© <span class="js-year">2026</span> LUMINA. Notifications directed to kumar02premsri@gmail.com &middot; +91 93395 20358</small>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      'use strict';
+      let allItems = [];
+      let currentFilter = 'all';
+
+      const feed = document.getElementById('inbox-feed');
+      const searchInput = document.getElementById('search-input');
+      const refreshBtn = document.getElementById('refresh-btn');
+      const testBtn = document.getElementById('test-alert-btn');
+      const tabBtns = document.querySelectorAll('.inbox-tab-btn');
+
+      const statTotal = document.getElementById('stat-total');
+      const statStay = document.getElementById('stat-stay');
+      const statTable = document.getElementById('stat-table');
+      const statAvail = document.getElementById('stat-avail');
+
+      function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, function(c) {
+          return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+        });
+      }
+
+      function formatDate(d) {
+        if (!d) return '—';
+        try {
+          const date = new Date(d);
+          return date.toLocaleDateString('en-IN', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+        } catch { return d; }
+      }
+
+      async function fetchInbox() {
+        try {
+          const res = await fetch('/api/inbox');
+          if (!res.ok) throw new Error('API request failed');
+          const json = await res.json();
+          if (!json.success || !json.data) throw new Error('Invalid inbox response');
+
+          allItems = [];
+          const data = json.data;
+
+          (data.stayRequests || []).forEach(item => {
+            allItems.push({ ...item, _type: 'stay', _date: item.createdAt });
+          });
+          (data.reservations || []).forEach(item => {
+            allItems.push({ ...item, _type: 'table', _date: item.createdAt });
+          });
+          (data.availabilitySearches || []).forEach(item => {
+            allItems.push({ ...item, _type: 'availability', _date: item.createdAt });
+          });
+          (data.inquiries || []).forEach(item => {
+            allItems.push({ ...item, _type: 'inquiry', _date: item.createdAt });
+          });
+
+          // Sort descending by date
+          allItems.sort((a, b) => new Date(b._date || 0) - new Date(a._date || 0));
+
+          // Update KPIs
+          const sCount = (data.stayRequests || []).length;
+          const tCount = (data.reservations || []).length;
+          const aCount = (data.availabilitySearches || []).length;
+          const iCount = (data.inquiries || []).length;
+
+          statStay.textContent = sCount;
+          statTable.textContent = tCount;
+          statAvail.textContent = aCount;
+          statTotal.textContent = sCount + tCount + aCount + iCount;
+
+          renderList();
+        } catch (err) {
+          console.error('Inbox fetch error:', err);
+          feed.innerHTML = `
+            <div class="empty-state">
+              <h3>Unable to sync inbox</h3>
+              <p>${escapeHtml(err.message)}</p>
+              <button class="btn btn--gold" style="margin-top:14px" onclick="location.reload()">Retry Connection</button>
+            </div>
+          `;
+        }
+      }
+
+      function renderList() {
+        const query = searchInput.value.trim().toLowerCase();
+        const filtered = allItems.filter(item => {
+          if (currentFilter !== 'all' && item._type !== currentFilter) return false;
+          if (!query) return true;
+          const str = (
+            (item.name || '') + ' ' +
+            (item.email || '') + ' ' +
+            (item.phone || '') + ' ' +
+            (item.roomType || '') + ' ' +
+            (item._id || '')
+          ).toLowerCase();
+          return str.includes(query);
+        });
+
+        if (!filtered.length) {
+          feed.innerHTML = `
+            <div class="empty-state">
+              <h3>No inquiries found</h3>
+              <p>${allItems.length === 0 ? 'No booking requests have been received yet. Test one below!' : 'No entries match your search criteria.'}</p>
+            </div>
+          `;
+          return;
+        }
+
+        feed.innerHTML = filtered.map(item => {
+          const type = item._type;
+          let badgeClass = 'badge-stay';
+          let badgeLabel = '🛏 Room Stay';
+          if (type === 'table') { badgeClass = 'badge-table'; badgeLabel = '🍽 Table Reservation'; }
+          else if (type === 'availability') { badgeClass = 'badge-avail'; badgeLabel = '🔍 Availability Search'; }
+          else if (type === 'inquiry') { badgeClass = 'badge-contact'; badgeLabel = '✉ Contact Message'; }
+
+          const ref = item._id ? '#' + String(item._id).slice(-6).toUpperCase() : '';
+
+          let paramsHtml = '';
+          if (type === 'stay') {
+            paramsHtml = `
+              <span class="inbox-param-tag">Room: <strong>${escapeHtml(item.roomType)}</strong></span>
+              <span class="inbox-param-tag">Dates: <strong>${escapeHtml(item.checkIn)} → ${escapeHtml(item.checkOut)}</strong></span>
+              <span class="inbox-param-tag">Guests: <strong>${escapeHtml(item.guests)}</strong></span>
+              <span class="inbox-param-tag">Rooms: <strong>${escapeHtml(item.rooms || 1)}</strong></span>
+            `;
+          } else if (type === 'table') {
+            paramsHtml = `
+              <span class="inbox-param-tag">Date: <strong>${escapeHtml(item.date)}</strong></span>
+              <span class="inbox-param-tag">Time: <strong>${escapeHtml(item.time)}</strong></span>
+              <span class="inbox-param-tag">Party: <strong>${escapeHtml(item.guests)} guests</strong></span>
+              <span class="inbox-param-tag">Seating: <strong>${escapeHtml(item.seatingPreference)}</strong></span>
+            `;
+          } else if (type === 'availability') {
+            paramsHtml = `
+              <span class="inbox-param-tag">Interested Room: <strong>${escapeHtml(item.roomType)}</strong></span>
+              <span class="inbox-param-tag">Dates: <strong>${escapeHtml(item.checkIn)} → ${escapeHtml(item.checkOut)}</strong></span>
+              <span class="inbox-param-tag">Guests: <strong>${escapeHtml(item.guests)}</strong></span>
+            `;
+          } else if (type === 'inquiry') {
+            paramsHtml = `
+              <span class="inbox-param-tag">Subject: <strong>${escapeHtml(item.subject)}</strong></span>
+            `;
+          }
+
+          const note = item.requests || item.message || '';
+
+          return `
+            <article class="inbox-card">
+              <div>
+                <span class="inbox-badge ${badgeClass}">${badgeLabel}</span>
+                <p style="font-size:0.75rem;color:#999;margin:8px 0 0">${formatDate(item._date)}</p>
+              </div>
+              <div class="inbox-details">
+                <h3>
+                  <span>${escapeHtml(item.name || 'Anonymous Guest')}</span>
+                  ${ref ? `<span style="font-size:0.8rem;color:#c89d5c;font-family:monospace">${ref}</span>` : ''}
+                </h3>
+                <div class="inbox-guest-contact">
+                  <span>✉ <a href="mailto:${encodeURIComponent(item.email)}?subject=Your LUMINA Booking ${encodeURIComponent(ref)}">${escapeHtml(item.email)}</a></span>
+                  ${item.phone ? `<span>☎ <a href="tel:${encodeURIComponent(item.phone)}">${escapeHtml(item.phone)}</a></span>` : ''}
+                </div>
+                <div class="inbox-params">${paramsHtml}</div>
+                ${note ? `<div class="inbox-note"><strong>Special Note:</strong> ${escapeHtml(note)}</div>` : ''}
+              </div>
+              <div class="inbox-actions">
+                <a class="btn-action btn-action-primary" href="mailto:${encodeURIComponent(item.email)}?subject=Confirmation: Your LUMINA Booking ${encodeURIComponent(ref)}">
+                  ✓ Confirm via Email
+                </a>
+                ${item.phone ? `<a class="btn-action btn-action-secondary" href="tel:${encodeURIComponent(item.phone)}">📞 Call Guest</a>` : ''}
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      // Filter tabs
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          currentFilter = btn.dataset.filter;
+          renderList();
+        });
+      });
+
+      searchInput.addEventListener('input', renderList);
+      refreshBtn.addEventListener('click', fetchInbox);
+
+      // Test alert button
+      testBtn.addEventListener('click', async () => {
+        testBtn.disabled = true;
+        testBtn.textContent = 'Triggering Alert…';
+        try {
+          const res = await fetch('/api/availability', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: 'Prem Test Guest',
+              email: 'kumar02premsri@gmail.com',
+              phone: '+91 93395 20358',
+              roomType: 'LUMINA Suite',
+              checkIn: new Date().toISOString().slice(0, 10),
+              checkOut: new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 10),
+              guests: 2,
+              message: 'Automated test alert from Concierge Inbox Dashboard.'
+            })
+          });
+          const result = await res.json();
+          alert('Test Notification Alert recorded! Message: ' + (result.message || 'Success'));
+          await fetchInbox();
+        } catch (err) {
+          alert('Error sending test alert: ' + err.message);
+        } finally {
+          testBtn.disabled = false;
+          testBtn.innerHTML = '<span aria-hidden="true">⚡</span> Send Test Alert';
+        }
+      });
+
+      // Initial load & poll every 30s
+      fetchInbox();
+      setInterval(fetchInbox, 30000);
+    })();
+  </script>
+</body>
+</html>
